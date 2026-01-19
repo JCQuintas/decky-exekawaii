@@ -1,0 +1,6 @@
+{
+  "id": "example-system-info",
+  "title": "System Info",
+  "description": "Display basic system information",
+  "command": "uname -a && echo '' && cat /etc/os-release 2>/dev/null || echo 'OS info not available'"
+}

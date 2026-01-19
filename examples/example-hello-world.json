@@ -1,0 +1,47 @@
+{
+  "id": "example-hello-world",
+  "title": "Hello World",
+  "description": "A simple example command that prints a greeting",
+  "command": "echo \"Hello, ${NAME:-World}! The count is ${COUNT:-0} and verbose mode is ${VERBOSE:-0}\"",
+  "configFields": [
+    {
+      "type": "divider",
+      "title": "Greeting Options",
+      "description": "Configure the greeting message"
+    },
+    {
+      "type": "select",
+      "title": "Name",
+      "description": "Who to greet",
+      "envVar": "NAME",
+      "initialValue": "World",
+      "options": [
+        { "label": "World", "value": "World" },
+        { "label": "Steam Deck", "value": "Steam Deck" },
+        { "label": "User", "value": "User" }
+      ]
+    },
+    {
+      "type": "divider",
+      "title": "Advanced Options",
+      "description": "Additional configuration"
+    },
+    {
+      "type": "number",
+      "title": "Count",
+      "description": "A number to include in the output",
+      "envVar": "COUNT",
+      "initialValue": 42,
+      "min": 0,
+      "max": 100,
+      "step": 1
+    },
+    {
+      "type": "boolean",
+      "title": "Verbose Mode",
+      "description": "Enable verbose output",
+      "envVar": "VERBOSE",
+      "initialValue": false
+    }
+  ]
+}
