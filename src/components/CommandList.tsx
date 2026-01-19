@@ -164,6 +164,7 @@ export function CommandList() {
               style={{
                 display: "flex",
                 alignItems: "flex-start",
+                flexGrow: 1,
                 gap: "8px",
                 padding: "8px",
                 backgroundColor: "#1a1d22",
@@ -171,7 +172,6 @@ export function CommandList() {
                 fontSize: "11px",
                 fontFamily: "monospace",
                 wordBreak: "break-all",
-                width: "100%",
               }}
             >
               <FaFolder style={{ flexShrink: 0, marginTop: "2px" }} />

@@ -287,21 +287,6 @@ export function CommandEditor({ command, onSave, onCancel }: CommandEditorProps)
         </PanelSectionRow>
       </PanelSection>
 
-      <PanelSection title="Actions">
-        <PanelSectionRow>
-          <ButtonItem layout="below" onClick={handleSave} disabled={!isValid}>
-            <FaSave style={{ marginRight: "8px" }} />
-            Save
-          </ButtonItem>
-        </PanelSectionRow>
-        <PanelSectionRow>
-          <ButtonItem layout="below" onClick={onCancel}>
-            <FaTimes style={{ marginRight: "8px" }} />
-            Cancel
-          </ButtonItem>
-        </PanelSectionRow>
-      </PanelSection>
-
       {configFields.map((field, index) => (
         <ConfigFieldEditor
           key={index}
@@ -325,6 +310,21 @@ export function CommandEditor({ command, onSave, onCancel }: CommandEditorProps)
           <ButtonItem layout="below" onClick={addConfigField}>
             <FaPlus style={{ marginRight: "8px" }} />
             Add Field
+          </ButtonItem>
+        </PanelSectionRow>
+      </PanelSection>
+
+      <PanelSection title="Actions">
+        <PanelSectionRow>
+          <ButtonItem layout="below" onClick={handleSave} disabled={!isValid}>
+            <FaSave style={{ marginRight: "8px" }} />
+            Save
+          </ButtonItem>
+        </PanelSectionRow>
+        <PanelSectionRow>
+          <ButtonItem layout="below" onClick={onCancel}>
+            <FaTimes style={{ marginRight: "8px" }} />
+            Cancel
           </ButtonItem>
         </PanelSectionRow>
       </PanelSection>
