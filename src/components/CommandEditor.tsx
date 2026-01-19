@@ -47,9 +47,7 @@ interface ConfigFieldEditorProps {
 
 function ConfigFieldEditor({ field, index, onChange, onRemove }: ConfigFieldEditorProps) {
   const updateField = useCallback(
-    <K extends keyof ConfigField>(key: K, value: ConfigField[K]) => {
-      onChange(index, { ...field, [key]: value } as ConfigField);
-    },
+    (key: string, value: any) => onChange(index, { ...field, [key]: value } ),
     [field, index, onChange]
   );
 
