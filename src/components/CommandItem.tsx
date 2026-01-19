@@ -2,6 +2,7 @@ import {
   ButtonItem,
   Focusable,
   PanelSection,
+  PanelSectionRow,
 } from "@decky/ui";
 import { useCallback, useMemo, useState } from "react";
 import { FaChevronDown, FaChevronRight, FaEdit, FaPlay, FaTrash } from "react-icons/fa";
@@ -20,7 +21,6 @@ export function CommandItem({ command, onEdit, onDelete }: CommandItemProps) {
   const [running, setRunning] = useState(false);
   const [result, setResult] = useState<CommandResult | null>(null);
   const [configValues, setConfigValues] = useState<ConfigFieldValues>(() => {
-    // Initialize with default values from config fields
     const initial: ConfigFieldValues = {};
     if (command.configFields) {
       for (const field of command.configFields) {
@@ -63,34 +63,20 @@ export function CommandItem({ command, onEdit, onDelete }: CommandItemProps) {
 
   return (
     <PanelSection>
-      <Focusable
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "8px",
-          padding: "8px 0",
-        }}
-      >
-        {/* Header with title and action buttons */}
+      <PanelSectionRow>
         <Focusable
           style={{
             display: "flex",
             alignItems: "center",
             gap: "8px",
+            cursor: hasConfigFields ? "pointer" : "default",
           }}
+          onClick={hasConfigFields ? () => setExpanded(!expanded) : undefined}
         >
           {hasConfigFields && (
-            <Focusable
-              style={{
-                cursor: "pointer",
-                padding: "4px",
-                display: "flex",
-                alignItems: "center",
-              }}
-              onClick={() => setExpanded(!expanded)}
-            >
+            <span style={{ fontSize: "12px" }}>
               {expanded ? <FaChevronDown /> : <FaChevronRight />}
-            </Focusable>
+            </span>
           )}
           <div style={{ flex: 1 }}>
             <div style={{ fontWeight: "bold" }}>{command.title}</div>
@@ -101,51 +87,40 @@ export function CommandItem({ command, onEdit, onDelete }: CommandItemProps) {
             )}
           </div>
         </Focusable>
+      </PanelSectionRow>
 
-        {/* Action buttons */}
-        <Focusable
-          style={{
-            display: "flex",
-            gap: "8px",
-            justifyContent: "flex-end",
-          }}
-        >
-          <ButtonItem
-            layout="below"
-            onClick={handleRun}
-            disabled={running}
-          >
-            <Focusable style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-              <FaPlay />
-              <span>{running ? "Running..." : "Run"}</span>
-            </Focusable>
-          </ButtonItem>
-          <ButtonItem
-            layout="below"
-            onClick={() => onEdit(command)}
-          >
-            <FaEdit />
-          </ButtonItem>
-          <ButtonItem
-            layout="below"
-            onClick={() => onDelete(command.id)}
-          >
-            <FaTrash />
-          </ButtonItem>
-        </Focusable>
+      <PanelSectionRow>
+        <ButtonItem layout="below" onClick={handleRun} disabled={running}>
+          <FaPlay style={{ marginRight: "8px" }} />
+          {running ? "Running..." : "Run"}
+        </ButtonItem>
+      </PanelSectionRow>
 
-        {/* Expanded configuration panel */}
-        {expanded && hasConfigFields && command.configFields && (
-          <ConfigPanel
-            fields={command.configFields}
-            values={configValues}
-            onChange={handleConfigChange}
-          />
-        )}
+      <PanelSectionRow>
+        <ButtonItem layout="below" onClick={() => onEdit(command)}>
+          <FaEdit style={{ marginRight: "8px" }} />
+          Edit
+        </ButtonItem>
+      </PanelSectionRow>
 
-        {/* Result display */}
-        {result && (
-          <Focusable
+      <PanelSectionRow>
+        <ButtonItem layout="below" onClick={() => onDelete(command.id)}>
+          <FaTrash style={{ marginRight: "8px" }} />
+          Delete
+        </ButtonItem>
+      </PanelSectionRow>
+
+      {expanded && hasConfigFields && command.configFields && (
+        <ConfigPanel
+          fields={command.configFields}
+          values={configValues}
+          onChange={handleConfigChange}
+        />
+      )}
+
+      {result && (
+        <PanelSectionRow>
+          <div
             style={{
               padding: "8px",
               backgroundColor: result.success ? "#1a472a" : "#4a1a1a",
@@ -156,15 +131,16 @@ export function CommandItem({ command, onEdit, onDelete }: CommandItemProps) {
               wordBreak: "break-all",
               maxHeight: "150px",
               overflow: "auto",
+              width: "100%",
             }}
           >
             <div style={{ marginBottom: "4px" }}>
               Exit code: {result.exitCode}
             </div>
             {result.output && <div>{result.output}</div>}
-          </Focusable>
-        )}
-      </Focusable>
+          </div>
+        </PanelSectionRow>
+      )}
     </PanelSection>
   );
 }

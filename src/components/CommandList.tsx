@@ -119,54 +119,32 @@ export function CommandList() {
   }
 
   return (
-    <Focusable>
+    <>
       <PanelSection title="Commands">
         <PanelSectionRow>
-          <Focusable style={{ display: "flex", gap: "8px" }}>
-            <ButtonItem layout="below" onClick={handleNew}>
-              <Focusable style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-                <FaPlus /> New Command
-              </Focusable>
-            </ButtonItem>
-            <ButtonItem layout="below" onClick={loadCommands}>
-              <Focusable style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-                <FaSync /> Refresh
-              </Focusable>
-            </ButtonItem>
-          </Focusable>
+          <ButtonItem layout="below" onClick={handleNew}>
+            <FaPlus style={{ marginRight: "8px" }} />
+            New Command
+          </ButtonItem>
+        </PanelSectionRow>
+        <PanelSectionRow>
+          <ButtonItem layout="below" onClick={loadCommands}>
+            <FaSync style={{ marginRight: "8px" }} />
+            Refresh
+          </ButtonItem>
         </PanelSectionRow>
       </PanelSection>
 
       {commands.length === 0 ? (
         <PanelSection>
           <PanelSectionRow>
-            <Focusable style={{ textAlign: "center", padding: "20px", color: "#8b929a" }}>
+            <div style={{ textAlign: "center", padding: "12px 0", color: "#8b929a" }}>
               <div>No commands configured.</div>
               <div style={{ fontSize: "12px", marginTop: "8px" }}>
-                Click "New Command" to create one, or add JSON files to:
+                Click "New Command" to create one, or add JSON files to the commands directory.
               </div>
-            </Focusable>
+            </div>
           </PanelSectionRow>
-          {commandsDir && (
-            <PanelSectionRow>
-              <Focusable
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                  padding: "8px",
-                  backgroundColor: "#1a1d22",
-                  borderRadius: "4px",
-                  fontSize: "11px",
-                  fontFamily: "monospace",
-                  wordBreak: "break-all",
-                }}
-              >
-                <FaFolder />
-                <span>{commandsDir}</span>
-              </Focusable>
-            </PanelSectionRow>
-          )}
         </PanelSection>
       ) : (
         commands.map((command) => (
@@ -179,13 +157,13 @@ export function CommandList() {
         ))
       )}
 
-      {commandsDir && commands.length > 0 && (
+      {commandsDir && (
         <PanelSection title="Commands Directory">
           <PanelSectionRow>
-            <Focusable
+            <div
               style={{
                 display: "flex",
-                alignItems: "center",
+                alignItems: "flex-start",
                 gap: "8px",
                 padding: "8px",
                 backgroundColor: "#1a1d22",
@@ -193,14 +171,15 @@ export function CommandList() {
                 fontSize: "11px",
                 fontFamily: "monospace",
                 wordBreak: "break-all",
+                width: "100%",
               }}
             >
-              <FaFolder />
+              <FaFolder style={{ flexShrink: 0, marginTop: "2px" }} />
               <span>{commandsDir}</span>
-            </Focusable>
+            </div>
           </PanelSectionRow>
         </PanelSection>
       )}
-    </Focusable>
+    </>
   );
 }

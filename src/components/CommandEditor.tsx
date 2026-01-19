@@ -1,7 +1,6 @@
 import {
   ButtonItem,
   DropdownItem,
-  Focusable,
   PanelSection,
   PanelSectionRow,
   TextField,
@@ -47,7 +46,7 @@ interface ConfigFieldEditorProps {
 
 function ConfigFieldEditor({ field, index, onChange, onRemove }: ConfigFieldEditorProps) {
   const updateField = useCallback(
-    (key: string, value: any) => onChange(index, { ...field, [key]: value } ),
+    (key: string, value: any) => onChange(index, { ...field, [key]: value }),
     [field, index, onChange]
   );
 
@@ -80,22 +79,15 @@ function ConfigFieldEditor({ field, index, onChange, onRemove }: ConfigFieldEdit
   );
 
   return (
-    <Focusable
-      style={{
-        padding: "12px",
-        marginBottom: "8px",
-        backgroundColor: "#1a1d22",
-        borderRadius: "4px",
-      }}
+    <PanelSection
+      title={`${field.type.charAt(0).toUpperCase() + field.type.slice(1)} Field`}
     >
-      <Focusable style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
-        <span style={{ fontWeight: "bold", textTransform: "capitalize" }}>
-          {field.type} Field
-        </span>
+      <PanelSectionRow>
         <ButtonItem layout="below" onClick={() => onRemove(index)}>
-          <FaTrash />
+          <FaTrash style={{ marginRight: "8px" }} />
+          Remove Field
         </ButtonItem>
-      </Focusable>
+      </PanelSectionRow>
 
       <PanelSectionRow>
         <TextField
@@ -118,7 +110,7 @@ function ConfigFieldEditor({ field, index, onChange, onRemove }: ConfigFieldEdit
           <TextField
             label="Environment Variable"
             value={field.envVar}
-            onChange={(e) => updateField("envVar" as keyof ConfigField, e.target.value)}
+            onChange={(e) => updateField("envVar", e.target.value)}
           />
         </PanelSectionRow>
       )}
@@ -132,7 +124,7 @@ function ConfigFieldEditor({ field, index, onChange, onRemove }: ConfigFieldEdit
               { label: "On", data: true },
             ]}
             selectedOption={field.initialValue}
-            onChange={(opt) => updateField("initialValue" as keyof ConfigField, opt.data)}
+            onChange={(opt) => updateField("initialValue", opt.data)}
           />
         </PanelSectionRow>
       )}
@@ -143,28 +135,28 @@ function ConfigFieldEditor({ field, index, onChange, onRemove }: ConfigFieldEdit
             <TextField
               label="Initial Value"
               value={String(field.initialValue)}
-              onChange={(e) => updateField("initialValue" as keyof ConfigField, Number(e.target.value) || 0)}
+              onChange={(e) => updateField("initialValue", Number(e.target.value) || 0)}
             />
           </PanelSectionRow>
           <PanelSectionRow>
             <TextField
               label="Min"
               value={String(field.min)}
-              onChange={(e) => updateField("min" as keyof ConfigField, Number(e.target.value) || 0)}
+              onChange={(e) => updateField("min", Number(e.target.value) || 0)}
             />
           </PanelSectionRow>
           <PanelSectionRow>
             <TextField
               label="Max"
               value={String(field.max)}
-              onChange={(e) => updateField("max" as keyof ConfigField, Number(e.target.value) || 100)}
+              onChange={(e) => updateField("max", Number(e.target.value) || 100)}
             />
           </PanelSectionRow>
           <PanelSectionRow>
             <TextField
               label="Step"
               value={String(field.step || 1)}
-              onChange={(e) => updateField("step" as keyof ConfigField, Number(e.target.value) || 1)}
+              onChange={(e) => updateField("step", Number(e.target.value) || 1)}
             />
           </PanelSectionRow>
         </>
@@ -176,40 +168,44 @@ function ConfigFieldEditor({ field, index, onChange, onRemove }: ConfigFieldEdit
             <TextField
               label="Initial Value"
               value={field.initialValue}
-              onChange={(e) => updateField("initialValue" as keyof ConfigField, e.target.value)}
+              onChange={(e) => updateField("initialValue", e.target.value)}
             />
           </PanelSectionRow>
-          <div style={{ marginTop: "8px" }}>
-            <div style={{ fontWeight: "bold", marginBottom: "4px" }}>Options</div>
-            {field.options.map((opt, optIndex) => (
-              <Focusable
-                key={optIndex}
-                style={{ display: "flex", gap: "8px", marginBottom: "4px", alignItems: "center" }}
-              >
+
+          {field.options.map((opt, optIndex) => (
+            <div key={optIndex}>
+              <PanelSectionRow>
                 <TextField
-                  label="Label"
+                  label={`Option ${optIndex + 1} Label`}
                   value={opt.label}
                   onChange={(e) => updateSelectOption(optIndex, "label", e.target.value)}
                 />
+              </PanelSectionRow>
+              <PanelSectionRow>
                 <TextField
-                  label="Value"
+                  label={`Option ${optIndex + 1} Value`}
                   value={opt.value}
                   onChange={(e) => updateSelectOption(optIndex, "value", e.target.value)}
                 />
+              </PanelSectionRow>
+              <PanelSectionRow>
                 <ButtonItem layout="below" onClick={() => removeSelectOption(optIndex)}>
-                  <FaTrash />
+                  <FaTrash style={{ marginRight: "8px" }} />
+                  Remove Option {optIndex + 1}
                 </ButtonItem>
-              </Focusable>
-            ))}
+              </PanelSectionRow>
+            </div>
+          ))}
+
+          <PanelSectionRow>
             <ButtonItem layout="below" onClick={addSelectOption}>
-              <Focusable style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-                <FaPlus /> Add Option
-              </Focusable>
+              <FaPlus style={{ marginRight: "8px" }} />
+              Add Option
             </ButtonItem>
-          </div>
+          </PanelSectionRow>
         </>
       )}
-    </Focusable>
+    </PanelSection>
   );
 }
 
@@ -266,7 +262,7 @@ export function CommandEditor({ command, onSave, onCancel }: CommandEditorProps)
   const isValid = title.trim() && cmd.trim();
 
   return (
-    <Focusable style={{ padding: "8px" }}>
+    <>
       <PanelSection title={command ? "Edit Command" : "New Command"}>
         <PanelSectionRow>
           <TextField
@@ -291,46 +287,47 @@ export function CommandEditor({ command, onSave, onCancel }: CommandEditorProps)
         </PanelSectionRow>
       </PanelSection>
 
-      <PanelSection title="Configuration Fields">
-        {configFields.map((field, index) => (
-          <ConfigFieldEditor
-            key={index}
-            field={field}
-            index={index}
-            onChange={updateConfigField}
-            onRemove={removeConfigField}
-          />
-        ))}
+      <PanelSection title="Actions">
+        <PanelSectionRow>
+          <ButtonItem layout="below" onClick={handleSave} disabled={!isValid}>
+            <FaSave style={{ marginRight: "8px" }} />
+            Save
+          </ButtonItem>
+        </PanelSectionRow>
+        <PanelSectionRow>
+          <ButtonItem layout="below" onClick={onCancel}>
+            <FaTimes style={{ marginRight: "8px" }} />
+            Cancel
+          </ButtonItem>
+        </PanelSectionRow>
+      </PanelSection>
 
-        <Focusable style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+      {configFields.map((field, index) => (
+        <ConfigFieldEditor
+          key={index}
+          field={field}
+          index={index}
+          onChange={updateConfigField}
+          onRemove={removeConfigField}
+        />
+      ))}
+
+      <PanelSection title="Add Configuration Field">
+        <PanelSectionRow>
           <DropdownItem
             label="Field Type"
             rgOptions={FIELD_TYPES}
             selectedOption={newFieldType}
             onChange={(opt) => setNewFieldType(opt.data)}
           />
+        </PanelSectionRow>
+        <PanelSectionRow>
           <ButtonItem layout="below" onClick={addConfigField}>
-            <Focusable style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-              <FaPlus /> Add Field
-            </Focusable>
+            <FaPlus style={{ marginRight: "8px" }} />
+            Add Field
           </ButtonItem>
-        </Focusable>
+        </PanelSectionRow>
       </PanelSection>
-
-      <PanelSection>
-        <Focusable style={{ display: "flex", gap: "8px", justifyContent: "flex-end" }}>
-          <ButtonItem layout="below" onClick={onCancel}>
-            <Focusable style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-              <FaTimes /> Cancel
-            </Focusable>
-          </ButtonItem>
-          <ButtonItem layout="below" onClick={handleSave} disabled={!isValid}>
-            <Focusable style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-              <FaSave /> Save
-            </Focusable>
-          </ButtonItem>
-        </Focusable>
-      </PanelSection>
-    </Focusable>
+    </>
   );
 }
