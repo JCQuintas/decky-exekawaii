@@ -1,11 +1,11 @@
 import {
+  DropdownItem,
   PanelSection,
   PanelSectionRow,
-  ToggleField,
   SliderField,
-  DropdownItem,
+  ToggleField,
 } from "@decky/ui";
-import { ConfigField, ConfigFieldValues } from "../types";
+import { ConfigField, ConfigFieldValues } from "../plugin-types";
 
 interface ConfigPanelProps {
   fields: ConfigField[];

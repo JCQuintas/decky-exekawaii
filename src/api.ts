@@ -1,5 +1,5 @@
 import { callable } from "@decky/api";
-import { CommandConfig, CommandResult, ConfigFieldValues, CommandListResponse } from "./types";
+import { CommandConfig, CommandListResponse, CommandResult, ConfigFieldValues } from "./plugin-types";
 
 // Backend API calls
 export const getCommands = callable<[], CommandListResponse>("get_commands");

@@ -1,16 +1,16 @@
-import { useState, useEffect, useCallback } from "react";
 import {
-  PanelSection,
-  PanelSectionRow,
   ButtonItem,
   Focusable,
+  PanelSection,
+  PanelSectionRow,
   Spinner,
 } from "@decky/ui";
-import { FaPlus, FaSync, FaFolder } from "react-icons/fa";
-import { CommandConfig } from "../types";
-import { getCommands, saveCommand, deleteCommand, getCommandsDirPath } from "../api";
-import { CommandItem } from "./CommandItem";
+import { useCallback, useEffect, useState } from "react";
+import { FaFolder, FaPlus, FaSync } from "react-icons/fa";
+import { deleteCommand, getCommands, getCommandsDirPath, saveCommand } from "../api";
+import { CommandConfig } from "../plugin-types";
 import { CommandEditor } from "./CommandEditor";
+import { CommandItem } from "./CommandItem";
 
 type View = "list" | "editor";
 

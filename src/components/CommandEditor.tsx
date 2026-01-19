@@ -8,7 +8,7 @@ import {
 } from "@decky/ui";
 import { useCallback, useEffect, useState } from "react";
 import { FaPlus, FaSave, FaTimes, FaTrash } from "react-icons/fa";
-import { CommandConfig, ConfigField, SelectOption } from "../types";
+import { CommandConfig, ConfigField, SelectOption } from "../plugin-types";
 
 interface CommandEditorProps {
   command: CommandConfig | null;

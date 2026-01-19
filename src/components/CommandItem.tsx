@@ -6,7 +6,7 @@ import {
 import { useCallback, useMemo, useState } from "react";
 import { FaChevronDown, FaChevronRight, FaEdit, FaPlay, FaTrash } from "react-icons/fa";
 import { executeCommand } from "../api";
-import { CommandConfig, CommandResult, ConfigFieldValues } from "../types";
+import { CommandConfig, CommandResult, ConfigFieldValues } from "../plugin-types";
 import { ConfigPanel } from "./ConfigPanel";
 
 interface CommandItemProps {
