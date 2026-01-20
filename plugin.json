@@ -6,6 +6,6 @@
   "publish": {
     "tags": ["utility", "scripts", "automation"],
     "description": "Run user-configurable CLI commands with customizable environment variables.",
-    "image": "https://opengraph.githubassets.com/1/JCQuintas/decky-exekawaii"
+    "image": "https://raw.githubusercontent.com/JCQuintas/decky-exekawaii/main/assets/logo.png"
   }
 }
