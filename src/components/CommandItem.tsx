@@ -90,26 +90,24 @@ export function CommandItem({ command, onEdit, onDelete }: CommandItemProps) {
       </PanelSectionRow>
 
       <PanelSectionRow>
-        <ButtonItem layout="below" onClick={handleRun} disabled={running}>
+        <ButtonItem layout="inline" onClick={handleRun} disabled={running}>
           <FaPlay style={{ marginRight: "8px" }} />
           {running ? "Running..." : "Run"}
         </ButtonItem>
-      </PanelSectionRow>
-
-      <PanelSectionRow>
-        <ButtonItem layout="below" onClick={() => onEdit(command)}>
-          <FaEdit style={{ marginRight: "8px" }} />
-          Edit
+        <ButtonItem
+          layout="inline"
+          onClick={() => onEdit(command)}
+        >
+          <FaEdit />
+        </ButtonItem>
+        <ButtonItem
+          layout="inline"
+          onClick={() => onDelete(command.id)}
+        >
+          <FaTrash />
         </ButtonItem>
       </PanelSectionRow>
-
-      <PanelSectionRow>
-        <ButtonItem layout="below" onClick={() => onDelete(command.id)}>
-          <FaTrash style={{ marginRight: "8px" }} />
-          Delete
-        </ButtonItem>
-      </PanelSectionRow>
-
+      
       {expanded && hasConfigFields && command.configFields && (
         <ConfigPanel
           fields={command.configFields}
