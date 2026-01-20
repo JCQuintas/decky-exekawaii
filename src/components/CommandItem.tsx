@@ -135,12 +135,9 @@ export function CommandItem({ command, onEdit, onDelete }: CommandItemProps) {
               wordBreak: "break-all",
               maxHeight: "150px",
               overflow: "auto",
-              width: "100%",
+              marginTop: "8px",
             }}
           >
-            <div style={{ marginBottom: "4px" }}>
-              Exit code: {result.exitCode}
-            </div>
             {result.output && <div>{result.output}</div>}
           </div>
         </PanelSectionRow>

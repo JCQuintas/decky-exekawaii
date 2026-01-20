@@ -1,5 +1,5 @@
 import {
-  ButtonItem,
+  DialogButton,
   Focusable,
   PanelSection,
   PanelSectionRow,
@@ -122,16 +122,21 @@ export function CommandList() {
     <>
       <PanelSection title="Commands">
         <PanelSectionRow>
-          <ButtonItem layout="inline" onClick={handleNew}>
-            <FaPlus style={{ marginRight: "8px" }} />
-            New Command
-          </ButtonItem>
-        </PanelSectionRow>
-        <PanelSectionRow>
-          <ButtonItem layout="inline" onClick={loadCommands}>
-            <FaSync style={{ marginRight: "8px" }} />
-            Refresh
-          </ButtonItem>
+          <Focusable flow-children="horizontal" style={{ display: "flex", justifyContent: "space-between", padding: 0, gap: "8px" }}>
+            <div style={{ flexGrow: 1 }}>
+              <DialogButton onClick={handleNew}>
+          <FaPlus style={{ marginRight: "8px" }} />
+                New Command
+              </DialogButton>
+            </div>
+            <DialogButton
+              aria-label="Refresh Commands"
+              style={{ minWidth: 0, width: "15%", paddingLeft: 0, paddingRight: 0, }}
+              onClick={loadCommands}
+            >
+              <FaSync />
+            </DialogButton>
+          </Focusable>
         </PanelSectionRow>
       </PanelSection>
 
