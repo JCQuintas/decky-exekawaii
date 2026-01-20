@@ -10,6 +10,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { FaDiceD6, FaEdit, FaTerminal, FaTrash } from "react-icons/fa";
 import { executeCommand } from "../api";
 import { CommandConfig, CommandResult, ConfigFieldValues } from "../plugin-types";
+import { ConfirmDeleteModal } from "./ConfirmDeleteModal";
 import { ConfigPanelModal } from "./ConfigPanelModal";
 
 interface CommandItemProps {
@@ -93,6 +94,15 @@ export function CommandItem({
     }
   }, [command.title, command.configFields, mergedConfigValues, onConfigValueChange]);
 
+  const handleDelete = useCallback(() => {
+    showModal(
+      <ConfirmDeleteModal
+        title={command.title}
+        onConfirm={() => onDelete(command.id)}
+      />
+    );
+  }, [command.id, command.title, onDelete]);
+
   return (
     <PanelSection>
       {/* Title and description */}
@@ -131,7 +141,7 @@ export function CommandItem({
           <DialogButton
             aria-label="Delete Command"
             style={{ minWidth: 0, width: "15%", paddingLeft: 0, paddingRight: 0 }}
-            onClick={() => onDelete(command.id)}
+            onClick={handleDelete}
           >
             <FaTrash />
           </DialogButton>
