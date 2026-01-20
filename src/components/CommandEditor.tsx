@@ -7,11 +7,16 @@ import {
 } from "@decky/ui";
 import { useCallback, useEffect, useState } from "react";
 import { FaPlus, FaSave, FaTimes } from "react-icons/fa";
+import { PersistedState } from "../hooks/usePersistedState";
 import { CommandConfig, ConfigField } from "../plugin-types";
 import { ConfigFieldEditor } from "./ConfigFieldEditor";
 
+type EditingDraft = NonNullable<PersistedState["editingCommandDraft"]>;
+
 interface CommandEditorProps {
   command: CommandConfig | null;
+  draft: EditingDraft | null;
+  onDraftChange: (draft: Partial<EditingDraft>) => void;
   onSave: (command: CommandConfig) => void;
   onCancel: () => void;
 }
@@ -38,28 +43,26 @@ function createDefaultField(type: string): ConfigField {
   }
 }
 
-export function CommandEditor({ command, onSave, onCancel }: CommandEditorProps) {
-  const [title, setTitle] = useState(command?.title || "");
-  const [description, setDescription] = useState(command?.description || "");
-  const [cmd, setCmd] = useState(command?.command || "");
-  const [configFields, setConfigFields] = useState<ConfigField[]>(
-    command?.configFields || []
-  );
+export function CommandEditor({ command, draft, onDraftChange, onSave, onCancel }: CommandEditorProps) {
   const [newFieldType, setNewFieldType] = useState("boolean");
 
+  // Use draft values, falling back to command values or empty
+  const title = draft?.title ?? command?.title ?? "";
+  const description = draft?.description ?? command?.description ?? "";
+  const cmd = draft?.command ?? command?.command ?? "";
+  const configFields = draft?.configFields ?? command?.configFields ?? [];
+
+  // Initialize draft from command if draft is empty but command exists
   useEffect(() => {
-    if (command) {
-      setTitle(command.title);
-      setDescription(command.description);
-      setCmd(command.command);
-      setConfigFields(command.configFields || []);
-    } else {
-      setTitle("");
-      setDescription("");
-      setCmd("");
-      setConfigFields([]);
+    if (command && !draft) {
+      onDraftChange({
+        title: command.title,
+        description: command.description,
+        command: command.command,
+        configFields: command.configFields || [],
+      });
     }
-  }, [command]);
+  }, [command, draft, onDraftChange]);
 
   const handleSave = useCallback(() => {
     const newCommand: CommandConfig = {
@@ -73,20 +76,18 @@ export function CommandEditor({ command, onSave, onCancel }: CommandEditorProps)
   }, [command?.id, title, description, cmd, configFields, onSave]);
 
   const addConfigField = useCallback(() => {
-    setConfigFields((prev) => [...prev, createDefaultField(newFieldType)]);
-  }, [newFieldType]);
+    onDraftChange({ configFields: [...configFields, createDefaultField(newFieldType)] });
+  }, [configFields, newFieldType, onDraftChange]);
 
   const updateConfigField = useCallback((index: number, field: ConfigField) => {
-    setConfigFields((prev) => {
-      const newFields = [...prev];
-      newFields[index] = field;
-      return newFields;
-    });
-  }, []);
+    const newFields = [...configFields];
+    newFields[index] = field;
+    onDraftChange({ configFields: newFields });
+  }, [configFields, onDraftChange]);
 
   const removeConfigField = useCallback((index: number) => {
-    setConfigFields((prev) => prev.filter((_, i) => i !== index));
-  }, []);
+    onDraftChange({ configFields: configFields.filter((_, i) => i !== index) });
+  }, [configFields, onDraftChange]);
 
   const isValid = title.trim() && cmd.trim();
 
@@ -97,21 +98,21 @@ export function CommandEditor({ command, onSave, onCancel }: CommandEditorProps)
           <TextField
             label="Title"
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={(e) => onDraftChange({ title: e.target.value })}
           />
         </PanelSectionRow>
         <PanelSectionRow>
           <TextField
             label="Description"
             value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            onChange={(e) => onDraftChange({ description: e.target.value })}
           />
         </PanelSectionRow>
         <PanelSectionRow>
           <TextField
             label="Command"
             value={cmd}
-            onChange={(e) => setCmd(e.target.value)}
+            onChange={(e) => onDraftChange({ command: e.target.value })}
           />
         </PanelSectionRow>
       </PanelSection>

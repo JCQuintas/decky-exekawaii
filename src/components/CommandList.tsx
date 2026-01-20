@@ -8,18 +8,27 @@ import {
 import { useCallback, useEffect, useState } from "react";
 import { FaFolder, FaPlus, FaSync } from "react-icons/fa";
 import { deleteCommand, getCommands, getCommandsDirPath, saveCommand } from "../api";
+import { usePersistedState } from "../hooks/usePersistedState";
 import { CommandConfig } from "../plugin-types";
 import { CommandEditor } from "./CommandEditor";
 import { CommandItem } from "./CommandItem";
 
-type View = "list" | "editor";
-
 export function CommandList() {
   const [commands, setCommands] = useState<CommandConfig[]>([]);
   const [loading, setLoading] = useState(true);
-  const [view, setView] = useState<View>("list");
-  const [editingCommand, setEditingCommand] = useState<CommandConfig | null>(null);
   const [commandsDir, setCommandsDir] = useState<string>("");
+
+  const {
+    state,
+    setView,
+    setEditingCommand,
+    updateEditingDraft,
+    clearEditingState,
+    setConfigFieldValue,
+    getConfigFieldValues,
+    setExpanded,
+    isExpanded,
+  } = usePersistedState();
 
   const loadCommands = useCallback(async () => {
     setLoading(true);
@@ -48,14 +57,24 @@ export function CommandList() {
   }, [loadCommands, loadCommandsDir]);
 
   const handleEdit = useCallback((command: CommandConfig) => {
-    setEditingCommand(command);
+    setEditingCommand(command.id, {
+      title: command.title,
+      description: command.description,
+      command: command.command,
+      configFields: command.configFields || [],
+    });
     setView("editor");
-  }, []);
+  }, [setEditingCommand, setView]);
 
   const handleNew = useCallback(() => {
-    setEditingCommand(null);
+    setEditingCommand(null, {
+      title: "",
+      description: "",
+      command: "",
+      configFields: [],
+    });
     setView("editor");
-  }, []);
+  }, [setEditingCommand, setView]);
 
   const handleSave = useCallback(
     async (command: CommandConfig) => {
@@ -63,8 +82,7 @@ export function CommandList() {
         const result = await saveCommand(command);
         if (result.success) {
           await loadCommands();
-          setView("list");
-          setEditingCommand(null);
+          clearEditingState();
         } else {
           console.error("Failed to save command:", result.error);
         }
@@ -72,7 +90,7 @@ export function CommandList() {
         console.error("Failed to save command:", error);
       }
     },
-    [loadCommands]
+    [loadCommands, clearEditingState]
   );
 
   const handleDelete = useCallback(
@@ -92,14 +110,20 @@ export function CommandList() {
   );
 
   const handleCancel = useCallback(() => {
-    setView("list");
-    setEditingCommand(null);
-  }, []);
+    clearEditingState();
+  }, [clearEditingState]);
 
-  if (view === "editor") {
+  // Find the command being edited (if any)
+  const editingCommand = state.editingCommandId
+    ? commands.find((c) => c.id === state.editingCommandId) || null
+    : null;
+
+  if (state.view === "editor") {
     return (
       <CommandEditor
         command={editingCommand}
+        draft={state.editingCommandDraft}
+        onDraftChange={updateEditingDraft}
         onSave={handleSave}
         onCancel={handleCancel}
       />
@@ -125,7 +149,7 @@ export function CommandList() {
           <Focusable flow-children="horizontal" style={{ display: "flex", justifyContent: "space-between", padding: 0, gap: "8px" }}>
             <div style={{ flexGrow: 1 }}>
               <DialogButton onClick={handleNew}>
-          <FaPlus style={{ marginRight: "8px" }} />
+                <FaPlus style={{ marginRight: "8px" }} />
                 New Command
               </DialogButton>
             </div>
@@ -156,6 +180,10 @@ export function CommandList() {
           <CommandItem
             key={command.id}
             command={command}
+            expanded={isExpanded(command.id)}
+            configValues={getConfigFieldValues(command.id)}
+            onExpandedChange={(expanded) => setExpanded(command.id, expanded)}
+            onConfigValueChange={(envVar, value) => setConfigFieldValue(command.id, envVar, value)}
             onEdit={handleEdit}
             onDelete={handleDelete}
           />

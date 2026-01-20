@@ -4,7 +4,7 @@ import {
   PanelSection,
   PanelSectionRow
 } from "@decky/ui";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { FaChevronDown, FaChevronRight, FaEdit, FaPlay, FaTrash } from "react-icons/fa";
 import { executeCommand } from "../api";
 import { CommandConfig, CommandResult, ConfigFieldValues } from "../plugin-types";
@@ -12,43 +12,62 @@ import { ConfigPanel } from "./ConfigPanel";
 
 interface CommandItemProps {
   command: CommandConfig;
+  expanded: boolean;
+  configValues: ConfigFieldValues;
+  onExpandedChange: (expanded: boolean) => void;
+  onConfigValueChange: (envVar: string, value: string | number | boolean) => void;
   onEdit: (command: CommandConfig) => void;
   onDelete: (commandId: string) => void;
 }
 
-export function CommandItem({ command, onEdit, onDelete }: CommandItemProps) {
-  const [expanded, setExpanded] = useState(false);
+export function CommandItem({
+  command,
+  expanded,
+  configValues,
+  onExpandedChange,
+  onConfigValueChange,
+  onEdit,
+  onDelete,
+}: CommandItemProps) {
   const [running, setRunning] = useState(false);
   const [result, setResult] = useState<CommandResult | null>(null);
-  const [configValues, setConfigValues] = useState<ConfigFieldValues>(() => {
-    const initial: ConfigFieldValues = {};
+
+  // Merge persisted values with defaults from config fields
+  const mergedConfigValues = useMemo(() => {
+    const merged: ConfigFieldValues = {};
     if (command.configFields) {
       for (const field of command.configFields) {
         if (field.type !== "divider" && "envVar" in field) {
-          initial[field.envVar] = field.initialValue;
+          merged[field.envVar] = configValues[field.envVar] ?? field.initialValue;
         }
       }
     }
-    return initial;
-  });
+    return merged;
+  }, [command.configFields, configValues]);
+
+  // Initialize persisted values with defaults if not set
+  useEffect(() => {
+    if (command.configFields) {
+      for (const field of command.configFields) {
+        if (field.type !== "divider" && "envVar" in field) {
+          if (configValues[field.envVar] === undefined) {
+            onConfigValueChange(field.envVar, field.initialValue);
+          }
+        }
+      }
+    }
+  }, [command.configFields, configValues, onConfigValueChange]);
 
   const hasConfigFields = useMemo(
     () => command.configFields && command.configFields.length > 0,
     [command.configFields]
   );
 
-  const handleConfigChange = useCallback(
-    (envVar: string, value: string | number | boolean) => {
-      setConfigValues((prev) => ({ ...prev, [envVar]: value }));
-    },
-    []
-  );
-
   const handleRun = useCallback(async () => {
     setRunning(true);
     setResult(null);
     try {
-      const res = await executeCommand(command.id, configValues);
+      const res = await executeCommand(command.id, mergedConfigValues);
       setResult(res);
     } catch (error) {
       setResult({
@@ -59,7 +78,7 @@ export function CommandItem({ command, onEdit, onDelete }: CommandItemProps) {
     } finally {
       setRunning(false);
     }
-  }, [command.id, configValues]);
+  }, [command.id, mergedConfigValues]);
 
   return (
     <PanelSection>
@@ -71,7 +90,7 @@ export function CommandItem({ command, onEdit, onDelete }: CommandItemProps) {
             gap: "8px",
             cursor: hasConfigFields ? "pointer" : "default",
           }}
-          onClick={hasConfigFields ? () => setExpanded(!expanded) : undefined}
+          onClick={hasConfigFields ? () => onExpandedChange(!expanded) : undefined}
         >
           {hasConfigFields && (
             <span style={{ fontSize: "12px" }}>
@@ -117,8 +136,8 @@ export function CommandItem({ command, onEdit, onDelete }: CommandItemProps) {
       {expanded && hasConfigFields && command.configFields && (
         <ConfigPanel
           fields={command.configFields}
-          values={configValues}
-          onChange={handleConfigChange}
+          values={mergedConfigValues}
+          onChange={onConfigValueChange}
         />
       )}
 
