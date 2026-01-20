@@ -20,8 +20,6 @@ export function CommandList() {
   const {
     setConfigFieldValue,
     getConfigFieldValues,
-    setExpanded,
-    isExpanded,
   } = useAppState();
 
   const loadCommands = useCallback(async () => {
@@ -135,9 +133,7 @@ export function CommandList() {
           <CommandItem
             key={command.id}
             command={command}
-            expanded={isExpanded(command.id)}
             configValues={getConfigFieldValues(command.id)}
-            onExpandedChange={(expanded) => setExpanded(command.id, expanded)}
             onConfigValueChange={(envVar, value) => setConfigFieldValue(command.id, envVar, value)}
             onEdit={handleEdit}
             onDelete={handleDelete}

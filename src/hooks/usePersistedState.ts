@@ -2,12 +2,10 @@ import { useCallback, useState } from "react";
 
 export interface AppState {
   configFieldValues: Record<string, Record<string, string | number | boolean>>;
-  expandedCommands: Record<string, boolean>;
 }
 
 const DEFAULT_STATE: AppState = {
   configFieldValues: {},
-  expandedCommands: {},
 };
 
 export function useAppState() {
@@ -30,20 +28,6 @@ export function useAppState() {
     return state.configFieldValues[commandId] || {};
   }, [state.configFieldValues]);
 
-  const setExpanded = useCallback((commandId: string, expanded: boolean) => {
-    setState((prev) => ({
-      ...prev,
-      expandedCommands: {
-        ...prev.expandedCommands,
-        [commandId]: expanded,
-      },
-    }));
-  }, []);
-
-  const isExpanded = useCallback((commandId: string): boolean => {
-    return state.expandedCommands[commandId] || false;
-  }, [state.expandedCommands]);
-
   const resetState = useCallback(() => {
     setState(DEFAULT_STATE);
   }, []);
@@ -52,8 +36,6 @@ export function useAppState() {
     state,
     setConfigFieldValue,
     getConfigFieldValues,
-    setExpanded,
-    isExpanded,
     resetState,
   };
 }

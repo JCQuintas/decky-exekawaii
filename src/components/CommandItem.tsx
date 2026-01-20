@@ -3,19 +3,18 @@ import {
   Field,
   Focusable,
   PanelSection,
-  PanelSectionRow
+  PanelSectionRow,
+  showModal,
 } from "@decky/ui";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { FaChevronDown, FaChevronUp, FaDiceD6, FaEdit, FaTerminal, FaTrash } from "react-icons/fa";
+import { FaDiceD6, FaEdit, FaTerminal, FaTrash } from "react-icons/fa";
 import { executeCommand } from "../api";
 import { CommandConfig, CommandResult, ConfigFieldValues } from "../plugin-types";
-import { ConfigPanel } from "./ConfigPanel";
+import { ConfigPanelModal } from "./ConfigPanelModal";
 
 interface CommandItemProps {
   command: CommandConfig;
-  expanded: boolean;
   configValues: ConfigFieldValues;
-  onExpandedChange: (expanded: boolean) => void;
   onConfigValueChange: (envVar: string, value: string | number | boolean) => void;
   onEdit: (command: CommandConfig) => void;
   onDelete: (commandId: string) => void;
@@ -23,9 +22,7 @@ interface CommandItemProps {
 
 export function CommandItem({
   command,
-  expanded,
   configValues,
-  onExpandedChange,
   onConfigValueChange,
   onEdit,
   onDelete,
@@ -83,6 +80,19 @@ export function CommandItem({
     }
   }, [command.id, mergedConfigValues]);
 
+  const handleOpenConfig = useCallback(() => {
+    if (command.configFields) {
+      showModal(
+        <ConfigPanelModal
+          title={command.title}
+          fields={command.configFields}
+          values={mergedConfigValues}
+          onChange={onConfigValueChange}
+        />
+      );
+    }
+  }, [command.title, command.configFields, mergedConfigValues, onConfigValueChange]);
+
   return (
     <PanelSection>
       {/* Title and description */}
@@ -90,30 +100,16 @@ export function CommandItem({
         <Field label={command.title} description={command.description} bottomSeparator='none' childrenLayout='below' />
       </PanelSectionRow>
 
-      {/* Configuration expand/collapse button */}
+      {/* Configuration button */}
       {hasConfigFields && (
         <PanelSectionRow>
-          <Focusable flow-children="horizontal" style={{ display: "flex", justifyContent: "center", padding: 0, marginBottom: "8px" }} >
-            <DialogButton onClick={() => onExpandedChange(!expanded)}>
-              <span style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <span style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                  <FaDiceD6 />
-                  Input
-                </span>
-                {expanded ? <FaChevronUp /> : <FaChevronDown />}
-              </span>
+          <Focusable flow-children="horizontal" style={{ display: "flex", justifyContent: "center", padding: 0, marginBottom: "8px" }}>
+            <DialogButton onClick={handleOpenConfig}>
+              <FaDiceD6 style={{ marginRight: "8px" }} />
+              Input
             </DialogButton>
           </Focusable>
         </PanelSectionRow>
-      )}
-
-      {/* Expanded configuration panel */}
-      {expanded && hasConfigFields && command.configFields && (
-        <ConfigPanel
-          fields={command.configFields}
-          values={mergedConfigValues}
-          onChange={onConfigValueChange}
-        />
       )}
 
       {/* Action buttons */}
