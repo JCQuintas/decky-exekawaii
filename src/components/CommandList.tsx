@@ -2,20 +2,18 @@ import {
   DialogButton,
   Focusable,
   PanelSection,
-  PanelSectionRow,
-  Spinner,
+  PanelSectionRow
 } from "@decky/ui";
 import { useCallback, useEffect, useState } from "react";
 import { FaFolder, FaPlus, FaSync } from "react-icons/fa";
 import { deleteCommand, getCommands, getCommandsDirPath, saveCommand } from "../api";
-import { usePersistedState } from "../hooks/usePersistedState";
+import { useAppState } from "../hooks/usePersistedState";
 import { CommandConfig } from "../plugin-types";
 import { CommandEditor } from "./CommandEditor";
 import { CommandItem } from "./CommandItem";
 
 export function CommandList() {
   const [commands, setCommands] = useState<CommandConfig[]>([]);
-  const [loading, setLoading] = useState(true);
   const [commandsDir, setCommandsDir] = useState<string>("");
 
   const {
@@ -28,17 +26,14 @@ export function CommandList() {
     getConfigFieldValues,
     setExpanded,
     isExpanded,
-  } = usePersistedState();
+  } = useAppState();
 
   const loadCommands = useCallback(async () => {
-    setLoading(true);
     try {
       const result = await getCommands();
       setCommands(result.commands || []);
     } catch (error) {
       console.error("Failed to load commands:", error);
-    } finally {
-      setLoading(false);
     }
   }, []);
 
@@ -127,18 +122,6 @@ export function CommandList() {
         onSave={handleSave}
         onCancel={handleCancel}
       />
-    );
-  }
-
-  if (loading) {
-    return (
-      <PanelSection>
-        <PanelSectionRow>
-          <Focusable style={{ display: "flex", justifyContent: "center", padding: "20px" }}>
-            <Spinner />
-          </Focusable>
-        </PanelSectionRow>
-      </PanelSection>
     );
   }
 

@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
 const STORAGE_KEY = "exekawaii-state";
 
-export interface PersistedState {
+export interface AppState {
   view: "list" | "editor";
   editingCommandId: string | null;
   editingCommandDraft: {
@@ -15,7 +15,7 @@ export interface PersistedState {
   expandedCommands: Record<string, boolean>;
 }
 
-const DEFAULT_STATE: PersistedState = {
+const DEFAULT_STATE: AppState = {
   view: "list",
   editingCommandId: null,
   editingCommandDraft: null,
@@ -23,38 +23,16 @@ const DEFAULT_STATE: PersistedState = {
   expandedCommands: {},
 };
 
-function loadState(): PersistedState {
-  try {
-    const stored = sessionStorage.getItem(STORAGE_KEY);
-    if (stored) {
-      return { ...DEFAULT_STATE, ...JSON.parse(stored) };
-    }
-  } catch (e) {
-    console.error("Failed to load persisted state:", e);
-  }
-  return DEFAULT_STATE;
-}
+export function useAppState() {
+  const [state, setState] = useState<AppState>(DEFAULT_STATE);
 
-function saveState(state: PersistedState): void {
-  try {
-    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  } catch (e) {
-    console.error("Failed to save persisted state:", e);
-  }
-}
 
-export function usePersistedState() {
-  const [state, setState] = useState<PersistedState>(loadState);
-
-  useEffect(() => {
-    saveState(state);
-  }, [state]);
 
   const setView = useCallback((view: "list" | "editor") => {
     setState((prev) => ({ ...prev, view }));
   }, []);
 
-  const setEditingCommand = useCallback((commandId: string | null, draft: PersistedState["editingCommandDraft"] = null) => {
+  const setEditingCommand = useCallback((commandId: string | null, draft: AppState["editingCommandDraft"] = null) => {
     setState((prev) => ({
       ...prev,
       editingCommandId: commandId,
@@ -62,7 +40,7 @@ export function usePersistedState() {
     }));
   }, []);
 
-  const updateEditingDraft = useCallback((draft: Partial<NonNullable<PersistedState["editingCommandDraft"]>>) => {
+  const updateEditingDraft = useCallback((draft: Partial<NonNullable<AppState["editingCommandDraft"]>>) => {
     setState((prev) => ({
       ...prev,
       editingCommandDraft: prev.editingCommandDraft

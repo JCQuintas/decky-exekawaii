@@ -7,11 +7,11 @@ import {
 } from "@decky/ui";
 import { useCallback, useEffect } from "react";
 import { FaSave, FaTimes } from "react-icons/fa";
-import { PersistedState } from "../hooks/usePersistedState";
+import { AppState } from "../hooks/usePersistedState";
 import { CommandConfig, ConfigField } from "../plugin-types";
 import { ConfigFieldEditor } from "./ConfigFieldEditor";
 
-type EditingDraft = NonNullable<PersistedState["editingCommandDraft"]>;
+type EditingDraft = NonNullable<AppState["editingCommandDraft"]>;
 
 interface CommandEditorProps {
   command: CommandConfig | null;
