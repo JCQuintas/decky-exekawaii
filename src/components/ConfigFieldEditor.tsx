@@ -1,9 +1,9 @@
 import {
   ButtonItem,
-  DropdownItem,
   PanelSection,
   PanelSectionRow,
   TextField,
+  ToggleField,
 } from "@decky/ui";
 import { useCallback } from "react";
 import { FaPlus, FaTrash } from "react-icons/fa";
@@ -89,14 +89,10 @@ export function ConfigFieldEditor({ field, index, onChange, onRemove }: ConfigFi
 
       {field.type === "boolean" && (
         <PanelSectionRow>
-          <DropdownItem
+          <ToggleField
             label="Initial Value"
-            rgOptions={[
-              { label: "Off", data: false },
-              { label: "On", data: true },
-            ]}
-            selectedOption={field.initialValue}
-            onChange={(opt) => updateField("initialValue", opt.data)}
+            checked={field.initialValue}
+            onChange={(checked) => updateField("initialValue", checked)}
           />
         </PanelSectionRow>
       )}
