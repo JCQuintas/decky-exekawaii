@@ -1,9 +1,10 @@
 import {
-  ButtonItem,
-  DropdownItem,
+  DialogButton,
+  Dropdown,
+  Focusable,
   PanelSection,
   PanelSectionRow,
-  TextField,
+  TextField
 } from "@decky/ui";
 import { useCallback, useEffect } from "react";
 import { FaPlus, FaSave, FaTimes } from "react-icons/fa";
@@ -103,27 +104,21 @@ export function CommandEditor({
   return (
     <>
       <PanelSection title={command ? "Edit Command" : "New Command"}>
-        <PanelSectionRow>
-          <TextField
-            label="Title"
-            value={title}
-            onChange={(e) => onDraftChange({ title: e.target.value })}
-          />
-        </PanelSectionRow>
-        <PanelSectionRow>
-          <TextField
-            label="Description"
-            value={description}
-            onChange={(e) => onDraftChange({ description: e.target.value })}
-          />
-        </PanelSectionRow>
-        <PanelSectionRow>
-          <TextField
-            label="Command"
-            value={cmd}
-            onChange={(e) => onDraftChange({ command: e.target.value })}
-          />
-        </PanelSectionRow>
+        <TextField
+          label="Title"
+          value={title}
+          onChange={(e) => onDraftChange({ title: e.target.value })}
+        />
+        <TextField
+          label="Description"
+          value={description}
+          onChange={(e) => onDraftChange({ description: e.target.value })}
+        />
+        <TextField
+          label="Command"
+          value={cmd}
+          onChange={(e) => onDraftChange({ command: e.target.value })}
+        />
       </PanelSection>
 
       {configFields.map((field, index) => (
@@ -138,33 +133,43 @@ export function CommandEditor({
 
       <PanelSection title="Add Configuration Field">
         <PanelSectionRow>
-          <DropdownItem
-            label="Field Type"
-            rgOptions={FIELD_TYPES}
-            selectedOption={newFieldType}
-            onChange={(opt) => onNewFieldTypeChange(opt.data)}
-          />
-        </PanelSectionRow>
-        <PanelSectionRow>
-          <ButtonItem layout="below" onClick={addConfigField}>
-            <FaPlus style={{ marginRight: "8px" }} />
-            Add Field
-          </ButtonItem>
+          <Focusable flow-children="horizontal" style={{ display: "flex", justifyContent: "space-between", padding: 0, gap: "8px" }}>
+            <div style={{ flexGrow: 1 }}>
+              <Dropdown
+                aria-label="Select Field Type"
+                rgOptions={FIELD_TYPES}
+                selectedOption={newFieldType}
+                onChange={(opt) => onNewFieldTypeChange(opt.data)}
+              />
+            </div>
+            <DialogButton
+              aria-label="Add Field"
+              style={{ minWidth: 0, width: "15%", paddingLeft: 0, paddingRight: 0, }}
+              onClick={addConfigField}
+            >
+              <FaPlus />
+            </DialogButton>
+          </Focusable>
         </PanelSectionRow>
       </PanelSection>
 
       <PanelSection title="Actions">
         <PanelSectionRow>
-          <ButtonItem layout="below" onClick={handleSave} disabled={!isValid}>
-            <FaSave style={{ marginRight: "8px" }} />
-            Save
-          </ButtonItem>
-        </PanelSectionRow>
-        <PanelSectionRow>
-          <ButtonItem layout="below" onClick={onCancel}>
-            <FaTimes style={{ marginRight: "8px" }} />
-            Cancel
-          </ButtonItem>
+          <Focusable flow-children="horizontal" style={{ display: "flex", justifyContent: "space-between", padding: 0, gap: "8px" }}>
+            <div style={{ flexGrow: 1 }}>
+              <DialogButton onClick={handleSave} disabled={!isValid}>
+                <FaSave style={{ marginRight: "8px" }} />
+                Save
+              </DialogButton>
+            </div>
+            <DialogButton
+              aria-label="Cancel"
+              style={{ minWidth: 0, width: "15%", paddingLeft: 0, paddingRight: 0, }}
+              onClick={onCancel}
+            >
+              <FaTimes />
+            </DialogButton>
+          </Focusable>
         </PanelSectionRow>
       </PanelSection>
     </>
