@@ -2,14 +2,15 @@ import {
   DialogButton,
   Focusable,
   PanelSection,
-  PanelSectionRow
+  PanelSectionRow,
+  showModal,
 } from "@decky/ui";
 import { useCallback, useEffect, useState } from "react";
 import { FaFolder, FaPlus, FaSync } from "react-icons/fa";
 import { deleteCommand, getCommands, getCommandsDirPath, saveCommand } from "../api";
 import { useAppState } from "../hooks/usePersistedState";
 import { CommandConfig } from "../plugin-types";
-import { CommandEditor } from "./CommandEditor";
+import { CommandEditorModal } from "./CommandEditorModal";
 import { CommandItem } from "./CommandItem";
 
 export function CommandList() {
@@ -17,11 +18,6 @@ export function CommandList() {
   const [commandsDir, setCommandsDir] = useState<string>("");
 
   const {
-    state,
-    setView,
-    setEditingCommand,
-    updateEditingDraft,
-    clearEditingState,
     setConfigFieldValue,
     getConfigFieldValues,
     setExpanded,
@@ -51,33 +47,12 @@ export function CommandList() {
     loadCommandsDir();
   }, [loadCommands, loadCommandsDir]);
 
-  const handleEdit = useCallback((command: CommandConfig) => {
-    setEditingCommand(command.id, {
-      title: command.title,
-      description: command.description,
-      command: command.command,
-      configFields: command.configFields || [],
-    });
-    setView("editor");
-  }, [setEditingCommand, setView]);
-
-  const handleNew = useCallback(() => {
-    setEditingCommand(null, {
-      title: "",
-      description: "",
-      command: "",
-      configFields: [],
-    });
-    setView("editor");
-  }, [setEditingCommand, setView]);
-
   const handleSave = useCallback(
     async (command: CommandConfig) => {
       try {
         const result = await saveCommand(command);
         if (result.success) {
           await loadCommands();
-          clearEditingState();
         } else {
           console.error("Failed to save command:", result.error);
         }
@@ -85,8 +60,26 @@ export function CommandList() {
         console.error("Failed to save command:", error);
       }
     },
-    [loadCommands, clearEditingState]
+    [loadCommands]
   );
+
+  const handleEdit = useCallback((command: CommandConfig) => {
+    showModal(
+      <CommandEditorModal
+        command={command}
+        onSave={handleSave}
+      />
+    );
+  }, [handleSave]);
+
+  const handleNew = useCallback(() => {
+    showModal(
+      <CommandEditorModal
+        command={null}
+        onSave={handleSave}
+      />
+    );
+  }, [handleSave]);
 
   const handleDelete = useCallback(
     async (commandId: string) => {
@@ -103,27 +96,6 @@ export function CommandList() {
     },
     [loadCommands]
   );
-
-  const handleCancel = useCallback(() => {
-    clearEditingState();
-  }, [clearEditingState]);
-
-  // Find the command being edited (if any)
-  const editingCommand = state.editingCommandId
-    ? commands.find((c) => c.id === state.editingCommandId) || null
-    : null;
-
-  if (state.view === "editor") {
-    return (
-      <CommandEditor
-        command={editingCommand}
-        draft={state.editingCommandDraft}
-        onDraftChange={updateEditingDraft}
-        onSave={handleSave}
-        onCancel={handleCancel}
-      />
-    );
-  }
 
   return (
     <>
