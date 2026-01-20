@@ -1,6 +1,6 @@
 import {
-  Button,
   ButtonItem,
+  DialogButton,
   Focusable,
   PanelSection,
   PanelSectionRow,
@@ -95,20 +95,20 @@ export function CommandItem({ command, onEdit, onDelete }: CommandItemProps) {
           <FaPlay style={{ marginRight: "8px" }} />
           {running ? "Running..." : "Run"}
         </ButtonItem>
-        <Button
+        <DialogButton
           aria-label="Edit Command"
           style={{ marginLeft: "8px" }}
           onClick={() => onEdit(command)}
         >
           <FaEdit />
-        </Button>
-        <Button
+        </DialogButton>
+        <DialogButton
           aria-label="Delete Command"
           style={{ marginLeft: "8px" }}
           onClick={() => onDelete(command.id)}
         >
           <FaTrash />
-        </Button>
+        </DialogButton>
       </PanelSectionRow>
       
       {expanded && hasConfigFields && command.configFields && (
