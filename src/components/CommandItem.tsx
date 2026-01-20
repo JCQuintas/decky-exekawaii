@@ -1,5 +1,6 @@
 import {
   DialogButton,
+  Field,
   Focusable,
   PanelSection,
   PanelSectionRow
@@ -86,14 +87,7 @@ export function CommandItem({
     <PanelSection>
       {/* Title and description */}
       <PanelSectionRow>
-        <div>
-          <div style={{ fontWeight: "bold" }}>{command.title}</div>
-          {command.description && (
-            <div style={{ fontSize: "12px", color: "#8b929a" }}>
-              {command.description}
-            </div>
-          )}
-        </div>
+        <Field label={command.title} description={command.description} bottomSeparator='none' childrenLayout='below' />
       </PanelSectionRow>
 
       {/* Configuration expand/collapse button */}
@@ -133,14 +127,14 @@ export function CommandItem({
           </div>
           <DialogButton
             aria-label="Edit Command"
-            style={{ minWidth: 0, width: "15%", paddingLeft: 0, paddingRight: 0, }}
+            style={{ minWidth: 0, width: "15%", paddingLeft: 0, paddingRight: 0 }}
             onClick={() => onEdit(command)}
           >
             <FaEdit />
           </DialogButton>
           <DialogButton
             aria-label="Delete Command"
-            style={{ minWidth: 0, width: "15%", paddingLeft: 0, paddingRight: 0, }}
+            style={{ minWidth: 0, width: "15%", paddingLeft: 0, paddingRight: 0 }}
             onClick={() => onDelete(command.id)}
           >
             <FaTrash />
