@@ -1,9 +1,8 @@
 import {
-  ButtonItem,
   DialogButton,
   Focusable,
   PanelSection,
-  PanelSectionRow,
+  PanelSectionRow
 } from "@decky/ui";
 import { useCallback, useMemo, useState } from "react";
 import { FaChevronDown, FaChevronRight, FaEdit, FaPlay, FaTrash } from "react-icons/fa";
@@ -93,10 +92,10 @@ export function CommandItem({ command, onEdit, onDelete }: CommandItemProps) {
       <PanelSectionRow>
         <Focusable flow-children="horizontal" style={{ display: "flex", justifyContent: "space-between", padding: 0, gap: "8px" }}>
           <div style={{ flexGrow: 1 }}>
-            <ButtonItem onClick={handleRun} disabled={running}>
+            <DialogButton onClick={handleRun} disabled={running}>
               <FaPlay style={{ marginRight: "8px" }} />
               {running ? "Running..." : "Run"}
-            </ButtonItem>
+            </DialogButton>
           </div>
           <DialogButton
             aria-label="Edit Command"

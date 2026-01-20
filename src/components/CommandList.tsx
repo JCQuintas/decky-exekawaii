@@ -122,13 +122,13 @@ export function CommandList() {
     <>
       <PanelSection title="Commands">
         <PanelSectionRow>
-          <ButtonItem onClick={handleNew}>
+          <ButtonItem layout="inline" onClick={handleNew}>
             <FaPlus style={{ marginRight: "8px" }} />
             New Command
           </ButtonItem>
         </PanelSectionRow>
         <PanelSectionRow>
-          <ButtonItem layout="below" onClick={loadCommands}>
+          <ButtonItem layout="inline" onClick={loadCommands}>
             <FaSync style={{ marginRight: "8px" }} />
             Refresh
           </ButtonItem>
