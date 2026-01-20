@@ -15,15 +15,8 @@ export function SelectField({ field, value, onChange, addBottomSeparator }: Sele
   const mainInputRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", padding: 0, gap: "4px", borderBottom: addBottomSeparator ? "1px solid #333" : "none", paddingBottom: "8px" }}>
-      <div style={{ marginBottom: "4px" }}>
-        <div style={{ fontWeight: "500" }}>{field.title}</div>
-        {field.description && (
-          <div style={{ fontSize: "12px", color: "#8b929a" }}>
-            {field.description}
-          </div>
-        )}
-      </div>
+    <div style={{ display: "flex", flexDirection: "column", padding: 0, borderBottom: addBottomSeparator ? "1px solid #333" : "none", paddingBottom: "8px" }}>
+      <div style={{ marginBottom: "8px", fontWeight: "500" }}>{field.title}</div>
       <DialogButton ref={mainInputRef} onClick={() => setExpanded(!expanded)}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <span>{selectedOption?.label || value || "Select..."}</span>
@@ -47,6 +40,11 @@ export function SelectField({ field, value, onChange, addBottomSeparator }: Sele
               </div>
             </DialogButton>
           ))}
+        </div>
+      )}
+      {field.description && (
+        <div style={{ marginTop: "8px", fontSize: "12px", color: "#8b929a" }}>
+          {field.description}
         </div>
       )}
     </div>

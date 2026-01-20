@@ -2,7 +2,7 @@ import {
   PanelSection,
   PanelSectionRow,
   SliderField,
-  ToggleField,
+  ToggleField
 } from "@decky/ui";
 import { ConfigField, ConfigFieldValues } from "../plugin-types";
 import { SelectField } from './SelectField';
