@@ -28,6 +28,7 @@ export function CommandList() {
     getConfigFieldValues,
     setExpanded,
     isExpanded,
+    setNewFieldType,
   } = usePersistedState();
 
   const loadCommands = useCallback(async () => {
@@ -124,6 +125,8 @@ export function CommandList() {
         command={editingCommand}
         draft={state.editingCommandDraft}
         onDraftChange={updateEditingDraft}
+        newFieldType={state.newFieldType}
+        onNewFieldTypeChange={setNewFieldType}
         onSave={handleSave}
         onCancel={handleCancel}
       />

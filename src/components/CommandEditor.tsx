@@ -5,7 +5,7 @@ import {
   PanelSectionRow,
   TextField,
 } from "@decky/ui";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import { FaPlus, FaSave, FaTimes } from "react-icons/fa";
 import { PersistedState } from "../hooks/usePersistedState";
 import { CommandConfig, ConfigField } from "../plugin-types";
@@ -17,6 +17,8 @@ interface CommandEditorProps {
   command: CommandConfig | null;
   draft: EditingDraft | null;
   onDraftChange: (draft: Partial<EditingDraft>) => void;
+  newFieldType: string;
+  onNewFieldTypeChange: (fieldType: string) => void;
   onSave: (command: CommandConfig) => void;
   onCancel: () => void;
 }
@@ -43,8 +45,15 @@ function createDefaultField(type: string): ConfigField {
   }
 }
 
-export function CommandEditor({ command, draft, onDraftChange, onSave, onCancel }: CommandEditorProps) {
-  const [newFieldType, setNewFieldType] = useState("boolean");
+export function CommandEditor({
+  command,
+  draft,
+  onDraftChange,
+  newFieldType,
+  onNewFieldTypeChange,
+  onSave,
+  onCancel,
+}: CommandEditorProps) {
 
   // Use draft values, falling back to command values or empty
   const title = draft?.title ?? command?.title ?? "";
@@ -133,7 +142,7 @@ export function CommandEditor({ command, draft, onDraftChange, onSave, onCancel 
             label="Field Type"
             rgOptions={FIELD_TYPES}
             selectedOption={newFieldType}
-            onChange={(opt) => setNewFieldType(opt.data)}
+            onChange={(opt) => onNewFieldTypeChange(opt.data)}
           />
         </PanelSectionRow>
         <PanelSectionRow>
