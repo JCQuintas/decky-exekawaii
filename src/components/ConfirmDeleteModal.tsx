@@ -18,15 +18,16 @@ interface ConfirmDeleteModalProps {
 export function ConfirmDeleteModal({
   title,
   onConfirm,
-  closeModal,
+  ...props
 }: ConfirmDeleteModalProps) {
+  const { closeModal } = props;
   const handleConfirm = () => {
     onConfirm();
     closeModal?.();
   };
 
   return (
-    <ModalRoot>
+    <ModalRoot {...props}>
       <DialogHeader>Delete Command</DialogHeader>
       <DialogBody>
         <Focusable>

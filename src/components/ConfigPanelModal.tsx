@@ -28,8 +28,9 @@ export function ConfigPanelModal({
   fields,
   values: initialValues,
   onSave,
-  closeModal,
+  ...props
 }: ConfigPanelModalProps) {
+  const { closeModal } = props;
   const [values, setValues] = useState<ConfigFieldValues>(initialValues);
 
   const handleChange = useCallback((envVar: string, value: string | number | boolean) => {
@@ -42,7 +43,7 @@ export function ConfigPanelModal({
   }, [values, onSave, closeModal]);
 
   return (
-    <ModalRoot>
+    <ModalRoot {...props}>
       <DialogHeader>{title} - Input</DialogHeader>
       <DialogBody>
         <Focusable>

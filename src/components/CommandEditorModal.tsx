@@ -40,7 +40,8 @@ function createDefaultField(type: string): ConfigField {
   }
 }
 
-export function CommandEditorModal({ command, onSave, closeModal }: CommandEditorModalProps) {
+export function CommandEditorModal({ command, onSave, ...props }: CommandEditorModalProps) {
+  const { closeModal } = props;
   const [title, setTitle] = useState(command?.title ?? "");
   const [description, setDescription] = useState(command?.description ?? "");
   const [cmd, setCmd] = useState(command?.command ?? "");
@@ -81,7 +82,7 @@ export function CommandEditorModal({ command, onSave, closeModal }: CommandEdito
   const isValid = title.trim() && cmd.trim();
 
   return (
-    <ModalRoot>
+    <ModalRoot {...props}>
       <DialogHeader>
         {command ? "Edit Command" : "New Command"}
       </DialogHeader>
