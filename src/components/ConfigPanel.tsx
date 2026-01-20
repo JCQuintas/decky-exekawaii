@@ -1,5 +1,5 @@
 import {
-  PanelSection,
+  Field,
   PanelSectionRow,
   SliderField,
   ToggleField
@@ -19,28 +19,15 @@ export function ConfigPanel({ fields, values, onChange }: ConfigPanelProps) {
   }
 
   return (
-    <PanelSection>
+    <>
       {fields.map((field, index) => {
-        const isLastOrNextIsDivider = index === fields.length - 1 || fields[index + 1].type === "divider";
-        const isFirst = index === 0;
         const key = `config-field-${index}`;
 
         switch (field.type) {
           case "divider":
             return (
               <PanelSectionRow key={key}>
-                <div style={{ padding: `${isFirst ? "8px" : "16px"} 0 8px 0`, margin: "0px -16px 8px -16px", borderTop: isFirst ? "none" : "1px solid #444" }}>
-                  <div style={{ margin: "0 16px" }}>
-                    <div style={{ fontWeight: "bold", marginBottom: "4px" }}>
-                      {field.title}
-                    </div>
-                    {field.description && (
-                      <div style={{ fontSize: "12px", color: "#8b929a" }}>
-                        {field.description}
-                      </div>
-                    )}
-                  </div>
-                </div>
+                <Field label={field.title} description={field.description} bottomSeparator='none' childrenLayout='below' />
               </PanelSectionRow>
             );
 
@@ -52,7 +39,6 @@ export function ConfigPanel({ fields, values, onChange }: ConfigPanelProps) {
                   description={field.description}
                   checked={values[field.envVar] as boolean ?? field.initialValue}
                   onChange={(checked) => onChange(field.envVar, checked)}
-                  bottomSeparator={isLastOrNextIsDivider ? 'none' : 'standard'}
                 />
               </PanelSectionRow>
             );
@@ -69,7 +55,6 @@ export function ConfigPanel({ fields, values, onChange }: ConfigPanelProps) {
                   step={field.step ?? 1}
                   onChange={(value) => onChange(field.envVar, value)}
                   showValue
-                  bottomSeparator={isLastOrNextIsDivider ? 'none' : 'standard'}
                 />
               </PanelSectionRow>
             );
@@ -81,7 +66,6 @@ export function ConfigPanel({ fields, values, onChange }: ConfigPanelProps) {
                   field={field}
                   value={values[field.envVar] as string ?? field.initialValue}
                   onChange={(value) => onChange(field.envVar, value)}
-                  addBottomSeparator={!isLastOrNextIsDivider}
                 />
               </PanelSectionRow>
             );
@@ -90,6 +74,9 @@ export function ConfigPanel({ fields, values, onChange }: ConfigPanelProps) {
             return null;
         }
       })}
-    </PanelSection>
+      <PanelSectionRow >
+        <Field childrenLayout='inline' indentLevel={0} padding='none' />
+      </PanelSectionRow>
+    </>
   );
 }

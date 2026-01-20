@@ -7,15 +7,14 @@ interface SelectFieldProps {
   field: Extract<ConfigField, { type: "select"; }>;
   value: string;
   onChange: (value: string) => void;
-  addBottomSeparator?: boolean;
 }
-export function SelectField({ field, value, onChange, addBottomSeparator }: SelectFieldProps) {
+export function SelectField({ field, value, onChange, }: SelectFieldProps) {
   const [expanded, setExpanded] = useState(false);
   const selectedOption = field.options.find((opt) => opt.value === value);
   const mainInputRef = useRef<HTMLDivElement>(null);
 
   return (
-    <Field label={field.title} description={field.description} childrenLayout='below' bottomSeparator={addBottomSeparator ? "standard" : "none"} >
+    <Field label={field.title} description={field.description} childrenLayout='below' >
       <div style={{ display: 'flex', flexDirection: 'column', padding: 0, margin: "0px -16px", }}>
         <div style={{ display: "flex", flexDirection: "column", margin: "0px 16px" }}>
           <DialogButton ref={mainInputRef} onClick={() => setExpanded(!expanded)}>
