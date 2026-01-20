@@ -1,6 +1,6 @@
 import {
   ButtonItem,
-  DropdownItem,
+  Dropdown,
   PanelSection,
   PanelSectionRow,
   TextField,
@@ -128,8 +128,8 @@ export function CommandEditor({ command, onSave, onCancel }: CommandEditorProps)
 
       <PanelSection title="Add Configuration Field">
         <PanelSectionRow>
-          <DropdownItem
-            label="Field Type"
+          <Dropdown
+            menuLabel='Field type'
             rgOptions={FIELD_TYPES}
             selectedOption={newFieldType}
             onChange={(opt) => setNewFieldType(opt.data)}

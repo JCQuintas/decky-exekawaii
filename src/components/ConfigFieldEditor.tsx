@@ -1,6 +1,6 @@
 import {
   ButtonItem,
-  DropdownItem,
+  Dropdown,
   PanelSection,
   PanelSectionRow,
   TextField,
@@ -89,8 +89,8 @@ export function ConfigFieldEditor({ field, index, onChange, onRemove }: ConfigFi
 
       {field.type === "boolean" && (
         <PanelSectionRow>
-          <DropdownItem
-            label="Initial Value"
+          <Dropdown
+            menuLabel="Initial Value"
             rgOptions={[
               { label: "Off", data: false },
               { label: "On", data: true },

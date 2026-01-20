@@ -1,5 +1,5 @@
 import {
-  DropdownItem,
+  Dropdown,
   PanelSection,
   PanelSectionRow,
   SliderField,
@@ -71,9 +71,8 @@ export function ConfigPanel({ fields, values, onChange }: ConfigPanelProps) {
           case "select":
             return (
               <PanelSectionRow key={key}>
-                <DropdownItem
-                  label={field.title}
-                  description={field.description}
+                <Dropdown
+                  menuLabel={field.title}
                   rgOptions={field.options.map((opt) => ({
                     label: opt.label,
                     data: opt.value,
