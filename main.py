@@ -8,11 +8,13 @@ import decky
 
 # Configuration directory for JSON command files
 COMMANDS_DIR_NAME = "commands"
+INPUT_DIR_NAME = "inputs"
 
 
 class Plugin:
     commands: dict[str, dict] = {}
     commands_dir: str = ""
+    input_dir: str = ""
 
     def _get_commands_dir(self) -> str:
         """Get the commands directory path, creating it if necessary."""
@@ -21,6 +23,14 @@ class Plugin:
         if not os.path.exists(self.commands_dir):
             os.makedirs(self.commands_dir, exist_ok=True)
         return self.commands_dir
+
+    def _get_input_dir(self) -> str:
+        """Get the input directory path, creating it if necessary."""
+        if not self.input_dir:
+            self.input_dir = os.path.join(decky.DECKY_PLUGIN_SETTINGS_DIR, INPUT_DIR_NAME)
+        if not os.path.exists(self.input_dir):
+            os.makedirs(self.input_dir, exist_ok=True)
+        return self.input_dir
 
     def _load_commands_from_files(self) -> None:
         """Load all command configurations from JSON files in the commands directory."""
@@ -102,9 +112,50 @@ class Plugin:
         if self._delete_command_file(command_id):
             if command_id in self.commands:
                 del self.commands[command_id]
+            # Also delete the input file if it exists
+            input_dir = self._get_input_dir()
+            input_filepath = os.path.join(input_dir, f"{command_id}.json")
+            if os.path.exists(input_filepath):
+                try:
+                    os.remove(input_filepath)
+                except Exception as e:
+                    decky.logger.error(f"Failed to delete input file for {command_id}: {e}")
             return {"success": True}
         else:
             return {"success": False, "error": "Failed to delete command"}
+
+    async def get_all_input_values(self) -> dict[str, dict]:
+        """Load all input values from JSON files in the input directory."""
+        input_dir = self._get_input_dir()
+        all_values = {}
+
+        if not os.path.exists(input_dir):
+            return all_values
+
+        for filename in os.listdir(input_dir):
+            if filename.endswith(".json"):
+                filepath = os.path.join(input_dir, filename)
+                try:
+                    with open(filepath, "r") as f:
+                        values = json.load(f)
+                        command_id = filename[:-5]  # Remove .json extension
+                        all_values[command_id] = values
+                except Exception as e:
+                    decky.logger.error(f"Failed to load input values from {filename}: {e}")
+
+        return all_values
+
+    async def save_input_values(self, command_id: str, values: dict) -> dict:
+        """Save input values for a command to a JSON file."""
+        input_dir = self._get_input_dir()
+        filepath = os.path.join(input_dir, f"{command_id}.json")
+        try:
+            with open(filepath, "w") as f:
+                json.dump(values, f, indent=2)
+            return {"success": True}
+        except Exception as e:
+            decky.logger.error(f"Failed to save input values for {command_id}: {e}")
+            return {"success": False, "error": str(e)}
 
     async def execute_command(self, command_id: str, env_vars: dict | None = None) -> dict:
         """Execute a command with optional environment variables."""

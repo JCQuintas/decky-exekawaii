@@ -7,7 +7,7 @@ import {
 } from "@decky/ui";
 import { useCallback, useEffect, useState } from "react";
 import { FaFolder, FaPlus, FaSync } from "react-icons/fa";
-import { deleteCommand, getCommands, getCommandsDirPath, saveCommand } from "../api";
+import { deleteCommand, getAllInputValues, getCommands, getCommandsDirPath, saveCommand, saveInputValues } from "../api";
 import { CommandConfig, ConfigFieldValues } from "../plugin-types";
 import { CommandEditorModal } from "./CommandEditorModal";
 import { CommandItem } from "./CommandItem";
@@ -22,13 +22,20 @@ export function CommandList() {
   }, [configFieldValues]);
 
   const setConfigFieldValue = useCallback((commandId: string, envVar: string, value: string | number | boolean) => {
-    setConfigFieldValues((prev) => ({
-      ...prev,
-      [commandId]: {
-        ...prev[commandId],
-        [envVar]: value,
-      },
-    }));
+    setConfigFieldValues((prev) => {
+      const newValues = {
+        ...prev,
+        [commandId]: {
+          ...prev[commandId],
+          [envVar]: value,
+        },
+      };
+      // Save to backend
+      saveInputValues(commandId, newValues[commandId]).catch((error) => {
+        console.error("Failed to save input values:", error);
+      });
+      return newValues;
+    });
   }, []);
 
   const loadCommands = useCallback(async () => {
@@ -49,10 +56,20 @@ export function CommandList() {
     }
   }, []);
 
+  const loadInputValues = useCallback(async () => {
+    try {
+      const values = await getAllInputValues();
+      setConfigFieldValues(values);
+    } catch (error) {
+      console.error("Failed to load input values:", error);
+    }
+  }, []);
+
   useEffect(() => {
     loadCommands();
     loadCommandsDir();
-  }, [loadCommands, loadCommandsDir]);
+    loadInputValues();
+  }, [loadCommands, loadCommandsDir, loadInputValues]);
 
   const handleSave = useCallback(
     async (command: CommandConfig) => {

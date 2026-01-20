@@ -22,3 +22,13 @@ export const executeCommand = callable<
 >("execute_command");
 
 export const getCommandsDirPath = callable<[], string>("get_commands_dir_path");
+
+export const getAllInputValues = callable<
+  [],
+  Record<string, ConfigFieldValues>
+>("get_all_input_values");
+
+export const saveInputValues = callable<
+  [commandId: string, values: ConfigFieldValues],
+  { success: boolean; error?: string }
+>("save_input_values");
