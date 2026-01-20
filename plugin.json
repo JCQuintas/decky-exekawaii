@@ -1,11 +1,11 @@
 {
   "name": "ExeKawaii",
-  "author": "jcquintas",
+  "author": "JCQuintas",
   "flags": ["_root"],
   "api_version": 1,
   "publish": {
     "tags": ["utility", "scripts", "automation"],
     "description": "Run user-configurable CLI commands with customizable environment variables.",
-    "image": "https://opengraph.githubassets.com/1/jcquintas/decky-exekawaii"
+    "image": "https://opengraph.githubassets.com/1/JCQuintas/decky-exekawaii"
   }
 }
