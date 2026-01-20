@@ -37,7 +37,7 @@ function SelectField({ field, value, onChange }: SelectFieldProps) {
         )}
       </div>
       <DialogButton onClick={() => setExpanded(!expanded)}>
-        <Focusable style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+        <Focusable style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <span>{selectedOption?.label || value || "Select..."}</span>
           {expanded ? <FaChevronUp /> : <FaChevronDown />}
         </Focusable>
@@ -55,7 +55,7 @@ function SelectField({ field, value, onChange }: SelectFieldProps) {
                 backgroundColor: opt.value === value ? "#1a472a" : undefined,
               }}
             >
-              <Focusable style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+              <Focusable style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <span>{opt.label}</span>
                 {opt.value === value && <FaCheck />}
               </Focusable>

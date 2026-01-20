@@ -5,7 +5,7 @@ import {
   PanelSectionRow
 } from "@decky/ui";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { FaChevronDown, FaChevronUp, FaCog, FaEdit, FaPlay, FaTrash } from "react-icons/fa";
+import { FaChevronDown, FaChevronUp, FaDiceD6, FaEdit, FaTerminal, FaTrash } from "react-icons/fa";
 import { executeCommand } from "../api";
 import { CommandConfig, CommandResult, ConfigFieldValues } from "../plugin-types";
 import { ConfigPanel } from "./ConfigPanel";
@@ -97,15 +97,17 @@ export function CommandItem({
       {/* Configuration expand/collapse button */}
       {hasConfigFields && (
         <PanelSectionRow>
-          <DialogButton onClick={() => onExpandedChange(!expanded)}>
-            <Focusable style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
-              <span style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                <FaCog />
-                Configuration
+          <Focusable flow-children="horizontal" style={{ display: "flex", justifyContent: "center", padding: 0, marginBottom: "8px" }} >
+            <DialogButton onClick={() => onExpandedChange(!expanded)}>
+              <span style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <span style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  <FaDiceD6 />
+                  Input
+                </span>
+                {expanded ? <FaChevronUp /> : <FaChevronDown />}
               </span>
-              {expanded ? <FaChevronUp /> : <FaChevronDown />}
-            </Focusable>
-          </DialogButton>
+            </DialogButton>
+          </Focusable>
         </PanelSectionRow>
       )}
 
@@ -123,7 +125,7 @@ export function CommandItem({
         <Focusable flow-children="horizontal" style={{ display: "flex", justifyContent: "space-between", padding: 0, gap: "8px" }}>
           <div style={{ flexGrow: 1 }}>
             <DialogButton onClick={handleRun} disabled={running}>
-              <FaPlay style={{ marginRight: "8px" }} />
+              <FaTerminal style={{ marginRight: "8px" }} />
               {running ? "Running..." : "Run"}
             </DialogButton>
           </div>
