@@ -19,7 +19,7 @@ interface ConfigPanelModalProps {
   title: string;
   fields: ConfigField[];
   values: ConfigFieldValues;
-  onChange: (envVar: string, value: string | number | boolean) => void;
+  onSave: (values: ConfigFieldValues) => void;
   closeModal?: () => void;
 }
 
@@ -27,15 +27,19 @@ export function ConfigPanelModal({
   title,
   fields,
   values: initialValues,
-  onChange,
+  onSave,
   closeModal,
 }: ConfigPanelModalProps) {
   const [values, setValues] = useState<ConfigFieldValues>(initialValues);
 
   const handleChange = useCallback((envVar: string, value: string | number | boolean) => {
     setValues((prev) => ({ ...prev, [envVar]: value }));
-    onChange(envVar, value);
-  }, [onChange]);
+  }, []);
+
+  const handleDone = useCallback(() => {
+    onSave(values);
+    closeModal?.();
+  }, [values, onSave, closeModal]);
 
   return (
     <ModalRoot>
@@ -106,7 +110,7 @@ export function ConfigPanelModal({
 
           <PanelSection>
             <PanelSectionRow>
-              <DialogButton onClick={closeModal}>
+              <DialogButton onClick={handleDone}>
                 <FaCheck style={{ marginRight: "8px" }} />
                 Done
               </DialogButton>

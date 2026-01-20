@@ -21,20 +21,13 @@ export function CommandList() {
     return configFieldValues[commandId] || {};
   }, [configFieldValues]);
 
-  const setConfigFieldValue = useCallback((commandId: string, envVar: string, value: string | number | boolean) => {
-    setConfigFieldValues((prev) => {
-      const newValues = {
-        ...prev,
-        [commandId]: {
-          ...prev[commandId],
-          [envVar]: value,
-        },
-      };
-      // Save to backend
-      saveInputValues(commandId, newValues[commandId]).catch((error) => {
-        console.error("Failed to save input values:", error);
-      });
-      return newValues;
+  const saveConfigFieldValues = useCallback((commandId: string, values: ConfigFieldValues) => {
+    setConfigFieldValues((prev) => ({
+      ...prev,
+      [commandId]: values,
+    }));
+    saveInputValues(commandId, values).catch((error) => {
+      console.error("Failed to save input values:", error);
     });
   }, []);
 
@@ -160,7 +153,7 @@ export function CommandList() {
             key={command.id}
             command={command}
             configValues={getConfigFieldValues(command.id)}
-            onConfigValueChange={(envVar, value) => setConfigFieldValue(command.id, envVar, value)}
+            onConfigValuesSave={(values) => saveConfigFieldValues(command.id, values)}
             onEdit={handleEdit}
             onDelete={handleDelete}
           />

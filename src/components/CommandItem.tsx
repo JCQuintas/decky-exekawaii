@@ -6,7 +6,7 @@ import {
   PanelSectionRow,
   showModal,
 } from "@decky/ui";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { FaDiceD6, FaEdit, FaTerminal, FaTrash } from "react-icons/fa";
 import { executeCommand } from "../api";
 import { CommandConfig, CommandResult, ConfigFieldValues } from "../plugin-types";
@@ -16,7 +16,7 @@ import { ConfigPanelModal } from "./ConfigPanelModal";
 interface CommandItemProps {
   command: CommandConfig;
   configValues: ConfigFieldValues;
-  onConfigValueChange: (envVar: string, value: string | number | boolean) => void;
+  onConfigValuesSave: (values: ConfigFieldValues) => void;
   onEdit: (command: CommandConfig) => void;
   onDelete: (commandId: string) => void;
 }
@@ -24,7 +24,7 @@ interface CommandItemProps {
 export function CommandItem({
   command,
   configValues,
-  onConfigValueChange,
+  onConfigValuesSave,
   onEdit,
   onDelete,
 }: CommandItemProps) {
@@ -44,18 +44,6 @@ export function CommandItem({
     return merged;
   }, [command.configFields, configValues]);
 
-  // Initialize persisted values with defaults if not set
-  useEffect(() => {
-    if (command.configFields) {
-      for (const field of command.configFields) {
-        if (field.type !== "divider" && "envVar" in field) {
-          if (configValues[field.envVar] === undefined) {
-            onConfigValueChange(field.envVar, field.initialValue);
-          }
-        }
-      }
-    }
-  }, [command.configFields, configValues, onConfigValueChange]);
 
   const hasConfigFields = useMemo(
     () => command.configFields && command.configFields.length > 0,
@@ -88,11 +76,11 @@ export function CommandItem({
           title={command.title}
           fields={command.configFields}
           values={mergedConfigValues}
-          onChange={onConfigValueChange}
+          onSave={onConfigValuesSave}
         />
       );
     }
-  }, [command.title, command.configFields, mergedConfigValues, onConfigValueChange]);
+  }, [command.title, command.configFields, mergedConfigValues, onConfigValuesSave]);
 
   const handleDelete = useCallback(() => {
     showModal(
