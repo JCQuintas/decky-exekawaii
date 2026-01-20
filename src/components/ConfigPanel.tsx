@@ -29,8 +29,8 @@ export function ConfigPanel({ fields, values, onChange }: ConfigPanelProps) {
           case "divider":
             return (
               <PanelSectionRow key={key}>
-                <div style={{ padding: `${isFirst ? "8px" : "16px"} 0 8px 0`, margin: "8px -8px", borderTop: isFirst ? "none" : "1px solid #444" }}>
-                  <div style={{ margin: "0 8px" }}>
+                <div style={{ padding: `${isFirst ? "8px" : "16px"} 0 8px 0`, margin: "0px -16px 8px -16px", borderTop: isFirst ? "none" : "1px solid #444" }}>
+                  <div style={{ margin: "0 16px" }}>
                     <div style={{ fontWeight: "bold", marginBottom: "4px" }}>
                       {field.title}
                     </div>
