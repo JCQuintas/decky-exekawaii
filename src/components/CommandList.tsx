@@ -122,7 +122,7 @@ export function CommandList() {
     <>
       <PanelSection title="Commands">
         <PanelSectionRow>
-          <ButtonItem layout="below" onClick={handleNew}>
+          <ButtonItem onClick={handleNew}>
             <FaPlus style={{ marginRight: "8px" }} />
             New Command
           </ButtonItem>

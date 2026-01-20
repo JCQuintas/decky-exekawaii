@@ -93,21 +93,21 @@ export function CommandItem({ command, onEdit, onDelete }: CommandItemProps) {
       <PanelSectionRow>
         <Focusable flow-children="horizontal" style={{ display: "flex", justifyContent: "space-between", padding: 0, gap: "8px" }}>
           <div style={{ flexGrow: 1 }}>
-            <ButtonItem layout="inline" onClick={handleRun} disabled={running}>
+            <ButtonItem onClick={handleRun} disabled={running}>
               <FaPlay style={{ marginRight: "8px" }} />
               {running ? "Running..." : "Run"}
             </ButtonItem>
           </div>
           <DialogButton
             aria-label="Edit Command"
-            style={{ minWidth: 0, width: "15%", padding: 0 }}
+            style={{ minWidth: 0, width: "15%", paddingLeft: 0, paddingRight: 0, }}
             onClick={() => onEdit(command)}
           >
             <FaEdit />
           </DialogButton>
           <DialogButton
             aria-label="Delete Command"
-            style={{ minWidth: 0, width: "15%", padding: 0 }}
+            style={{ minWidth: 0, width: "15%", paddingLeft: 0, paddingRight: 0, }}
             onClick={() => onDelete(command.id)}
           >
             <FaTrash />
