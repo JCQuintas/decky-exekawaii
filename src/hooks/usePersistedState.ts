@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 const STORAGE_KEY = "exekawaii-state";
 
@@ -11,7 +11,6 @@ export interface PersistedState {
     command: string;
     configFields: any[];
   } | null;
-  newFieldType: string;
   configFieldValues: Record<string, Record<string, string | number | boolean>>;
   expandedCommands: Record<string, boolean>;
 }
@@ -20,7 +19,6 @@ const DEFAULT_STATE: PersistedState = {
   view: "list",
   editingCommandId: null,
   editingCommandDraft: null,
-  newFieldType: "boolean",
   configFieldValues: {},
   expandedCommands: {},
 };
@@ -113,10 +111,6 @@ export function usePersistedState() {
     }));
   }, []);
 
-  const setNewFieldType = useCallback((fieldType: string) => {
-    setState((prev) => ({ ...prev, newFieldType: fieldType }));
-  }, []);
-
   const resetState = useCallback(() => {
     setState(DEFAULT_STATE);
     sessionStorage.removeItem(STORAGE_KEY);
@@ -132,7 +126,6 @@ export function usePersistedState() {
     setExpanded,
     isExpanded,
     clearEditingState,
-    setNewFieldType,
     resetState,
   };
 }

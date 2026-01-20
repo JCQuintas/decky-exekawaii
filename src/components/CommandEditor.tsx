@@ -1,13 +1,12 @@
 import {
   DialogButton,
-  Dropdown,
   Focusable,
   PanelSection,
   PanelSectionRow,
   TextField
 } from "@decky/ui";
 import { useCallback, useEffect } from "react";
-import { FaPlus, FaSave, FaTimes } from "react-icons/fa";
+import { FaSave, FaTimes } from "react-icons/fa";
 import { PersistedState } from "../hooks/usePersistedState";
 import { CommandConfig, ConfigField } from "../plugin-types";
 import { ConfigFieldEditor } from "./ConfigFieldEditor";
@@ -18,8 +17,6 @@ interface CommandEditorProps {
   command: CommandConfig | null;
   draft: EditingDraft | null;
   onDraftChange: (draft: Partial<EditingDraft>) => void;
-  newFieldType: string;
-  onNewFieldTypeChange: (fieldType: string) => void;
   onSave: (command: CommandConfig) => void;
   onCancel: () => void;
 }
@@ -50,8 +47,6 @@ export function CommandEditor({
   command,
   draft,
   onDraftChange,
-  newFieldType,
-  onNewFieldTypeChange,
   onSave,
   onCancel,
 }: CommandEditorProps) {
@@ -85,9 +80,9 @@ export function CommandEditor({
     onSave(newCommand);
   }, [command?.id, title, description, cmd, configFields, onSave]);
 
-  const addConfigField = useCallback(() => {
-    onDraftChange({ configFields: [...configFields, createDefaultField(newFieldType)] });
-  }, [configFields, newFieldType, onDraftChange]);
+  const addConfigField = useCallback((field: string) => {
+    onDraftChange({ configFields: [...configFields, createDefaultField(field)] });
+  }, [configFields, onDraftChange]);
 
   const updateConfigField = useCallback((index: number, field: ConfigField) => {
     const newFields = [...configFields];
@@ -132,25 +127,20 @@ export function CommandEditor({
       ))}
 
       <PanelSection title="Add Configuration Field">
-        <PanelSectionRow>
-          <Focusable flow-children="horizontal" style={{ display: "flex", justifyContent: "space-between", padding: 0, gap: "8px" }}>
-            <div style={{ flexGrow: 1 }}>
-              <Dropdown
-                aria-label="Select Field Type"
-                rgOptions={FIELD_TYPES}
-                selectedOption={newFieldType}
-                onChange={(opt) => onNewFieldTypeChange(opt.data)}
-              />
-            </div>
-            <DialogButton
-              aria-label="Add Field"
-              style={{ minWidth: 0, width: "15%", paddingLeft: 0, paddingRight: 0, }}
-              onClick={addConfigField}
-            >
-              <FaPlus />
-            </DialogButton>
-          </Focusable>
-        </PanelSectionRow>
+        <Focusable flow-children="vertical" style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", padding: 0, gap: "8px" }}>
+          {
+            FIELD_TYPES.map((ft) => {
+              return (
+                <DialogButton
+                  key={ft.data}
+                  onClick={() => addConfigField(ft.data)}
+                >
+                  {ft.label}
+                </DialogButton>
+              );
+            })
+          }
+        </Focusable>
       </PanelSection>
 
       <PanelSection title="Actions">
