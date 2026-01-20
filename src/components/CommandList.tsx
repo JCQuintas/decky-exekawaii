@@ -8,19 +8,28 @@ import {
 import { useCallback, useEffect, useState } from "react";
 import { FaFolder, FaPlus, FaSync } from "react-icons/fa";
 import { deleteCommand, getCommands, getCommandsDirPath, saveCommand } from "../api";
-import { useAppState } from "../hooks/usePersistedState";
-import { CommandConfig } from "../plugin-types";
+import { CommandConfig, ConfigFieldValues } from "../plugin-types";
 import { CommandEditorModal } from "./CommandEditorModal";
 import { CommandItem } from "./CommandItem";
 
 export function CommandList() {
   const [commands, setCommands] = useState<CommandConfig[]>([]);
   const [commandsDir, setCommandsDir] = useState<string>("");
+  const [configFieldValues, setConfigFieldValues] = useState<Record<string, ConfigFieldValues>>({});
 
-  const {
-    setConfigFieldValue,
-    getConfigFieldValues,
-  } = useAppState();
+  const getConfigFieldValues = useCallback((commandId: string): ConfigFieldValues => {
+    return configFieldValues[commandId] || {};
+  }, [configFieldValues]);
+
+  const setConfigFieldValue = useCallback((commandId: string, envVar: string, value: string | number | boolean) => {
+    setConfigFieldValues((prev) => ({
+      ...prev,
+      [commandId]: {
+        ...prev[commandId],
+        [envVar]: value,
+      },
+    }));
+  }, []);
 
   const loadCommands = useCallback(async () => {
     try {
