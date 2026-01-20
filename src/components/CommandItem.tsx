@@ -5,7 +5,7 @@ import {
   PanelSectionRow
 } from "@decky/ui";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { FaChevronDown, FaChevronRight, FaEdit, FaPlay, FaTrash } from "react-icons/fa";
+import { FaChevronDown, FaChevronUp, FaCog, FaEdit, FaPlay, FaTrash } from "react-icons/fa";
 import { executeCommand } from "../api";
 import { CommandConfig, CommandResult, ConfigFieldValues } from "../plugin-types";
 import { ConfigPanel } from "./ConfigPanel";
@@ -82,32 +82,43 @@ export function CommandItem({
 
   return (
     <PanelSection>
+      {/* Title and description */}
       <PanelSectionRow>
-        <Focusable
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "8px",
-            cursor: hasConfigFields ? "pointer" : "default",
-          }}
-          onClick={hasConfigFields ? () => onExpandedChange(!expanded) : undefined}
-        >
-          {hasConfigFields && (
-            <span style={{ fontSize: "12px" }}>
-              {expanded ? <FaChevronDown /> : <FaChevronRight />}
-            </span>
+        <div>
+          <div style={{ fontWeight: "bold" }}>{command.title}</div>
+          {command.description && (
+            <div style={{ fontSize: "12px", color: "#8b929a" }}>
+              {command.description}
+            </div>
           )}
-          <div style={{ flex: 1 }}>
-            <div style={{ fontWeight: "bold" }}>{command.title}</div>
-            {command.description && (
-              <div style={{ fontSize: "12px", color: "#8b929a" }}>
-                {command.description}
-              </div>
-            )}
-          </div>
-        </Focusable>
+        </div>
       </PanelSectionRow>
 
+      {/* Configuration expand/collapse button */}
+      {hasConfigFields && (
+        <PanelSectionRow>
+          <DialogButton onClick={() => onExpandedChange(!expanded)}>
+            <Focusable style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+              <span style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                <FaCog />
+                Configuration
+              </span>
+              {expanded ? <FaChevronUp /> : <FaChevronDown />}
+            </Focusable>
+          </DialogButton>
+        </PanelSectionRow>
+      )}
+
+      {/* Expanded configuration panel */}
+      {expanded && hasConfigFields && command.configFields && (
+        <ConfigPanel
+          fields={command.configFields}
+          values={mergedConfigValues}
+          onChange={onConfigValueChange}
+        />
+      )}
+
+      {/* Action buttons */}
       <PanelSectionRow>
         <Focusable flow-children="horizontal" style={{ display: "flex", justifyContent: "space-between", padding: 0, gap: "8px" }}>
           <div style={{ flexGrow: 1 }}>
@@ -133,14 +144,7 @@ export function CommandItem({
         </Focusable>
       </PanelSectionRow>
 
-      {expanded && hasConfigFields && command.configFields && (
-        <ConfigPanel
-          fields={command.configFields}
-          values={mergedConfigValues}
-          onChange={onConfigValueChange}
-        />
-      )}
-
+      {/* Result display */}
       {result && (
         <PanelSectionRow>
           <div
