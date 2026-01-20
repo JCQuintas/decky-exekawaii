@@ -64,8 +64,9 @@ export function CommandItem({
   );
 
   const handleRun = useCallback(async () => {
-    setRunning(true);
-    setResult(null);
+    const timeout = setTimeout(() => {
+      setRunning(true);
+    }, 200); // Show "Running..." only if it takes more than 200ms
     try {
       const res = await executeCommand(command.id, mergedConfigValues);
       setResult(res);
@@ -76,6 +77,7 @@ export function CommandItem({
         exitCode: -1,
       });
     } finally {
+      clearTimeout(timeout);
       setRunning(false);
     }
   }, [command.id, mergedConfigValues]);
