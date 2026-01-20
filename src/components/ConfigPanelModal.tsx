@@ -10,6 +10,7 @@ import {
   SliderField,
   ToggleField,
 } from "@decky/ui";
+import { useCallback, useState } from "react";
 import { FaCheck } from "react-icons/fa";
 import { ConfigField, ConfigFieldValues } from "../plugin-types";
 import { SelectField } from "./SelectField";
@@ -25,10 +26,17 @@ interface ConfigPanelModalProps {
 export function ConfigPanelModal({
   title,
   fields,
-  values,
+  values: initialValues,
   onChange,
   closeModal,
 }: ConfigPanelModalProps) {
+  const [values, setValues] = useState<ConfigFieldValues>(initialValues);
+
+  const handleChange = useCallback((envVar: string, value: string | number | boolean) => {
+    setValues((prev) => ({ ...prev, [envVar]: value }));
+    onChange(envVar, value);
+  }, [onChange]);
+
   return (
     <ModalRoot>
       <DialogHeader>{title} - Input</DialogHeader>
@@ -58,7 +66,7 @@ export function ConfigPanelModal({
                         label={field.title}
                         description={field.description}
                         checked={(values[field.envVar] as boolean) ?? field.initialValue}
-                        onChange={(checked) => onChange(field.envVar, checked)}
+                        onChange={(checked) => handleChange(field.envVar, checked)}
                       />
                     </PanelSectionRow>
                   );
@@ -73,7 +81,7 @@ export function ConfigPanelModal({
                         min={field.min}
                         max={field.max}
                         step={field.step ?? 1}
-                        onChange={(value) => onChange(field.envVar, value)}
+                        onChange={(value) => handleChange(field.envVar, value)}
                         showValue
                       />
                     </PanelSectionRow>
@@ -85,7 +93,7 @@ export function ConfigPanelModal({
                       <SelectField
                         field={field}
                         value={(values[field.envVar] as string) ?? field.initialValue}
-                        onChange={(value) => onChange(field.envVar, value)}
+                        onChange={(value) => handleChange(field.envVar, value)}
                       />
                     </PanelSectionRow>
                   );
