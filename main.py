@@ -157,6 +157,32 @@ class Plugin:
             decky.logger.error(f"Failed to save input values for {command_id}: {e}")
             return {"success": False, "error": str(e)}
 
+    def _prepare_clean_env(self, env_vars: dict | None = None) -> dict:
+        env = os.environ.copy()
+
+        # Remove Decky's LD_LIBRARY_PATH - it breaks system libraries for some commands
+        env.pop("LD_LIBRARY_PATH", None)
+        env.pop("LD_PRELOAD", None)
+
+        # Ensure proper user environment
+        uid = os.getuid()
+        home_dir = os.path.expanduser("~")
+
+        env["HOME"] = home_dir
+        env["PWD"] = home_dir
+        env["XDG_RUNTIME_DIR"] = f"/run/user/{uid}"
+
+        # Add user-provided environment variables
+        if env_vars:
+            for key, value in env_vars.items():
+                # Convert booleans and numbers to strings
+                if isinstance(value, bool):
+                    env[key] = "1" if value else "0"
+                else:
+                    env[key] = str(value)
+
+        return env
+
     async def execute_command(self, command_id: str, env_vars: dict | None = None) -> dict:
         """Execute a command with optional environment variables."""
         self._load_commands_from_files()
@@ -172,23 +198,19 @@ class Plugin:
         cmd = command["command"]
         decky.logger.info(f"Executing command: {cmd}")
 
-        # Prepare environment
-        env = os.environ.copy()
-        if env_vars:
-            for key, value in env_vars.items():
-                # Convert booleans and numbers to strings
-                if isinstance(value, bool):
-                    env[key] = "1" if value else "0"
-                else:
-                    env[key] = str(value)
+        env = self._prepare_clean_env(env_vars)
+
+        # Expand ~ in command path
+        cmd = os.path.expanduser(cmd)
 
         try:
+            # Use bash login shell to ensure proper environment
             result = subprocess.run(
-                cmd,
-                shell=True,
+                ["/bin/bash", "-l", "-c", cmd],
                 capture_output=True,
                 text=True,
                 env=env,
+                cwd=os.path.expanduser("~"),
                 timeout=300  # 5 minute timeout
             )
 

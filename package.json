@@ -7,7 +7,7 @@
     "build": "rollup -c",
     "watch": "rollup -c -w",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build:plugin": ".vscode/build.sh && sudo rm -rf ~/homebrew/plugins/ExeKawaii && sudo rm -rf ~/homebrew/settings/ExeKawaii/commands && sudo unzip ./out/ExeKawaii.zip -d ~/homebrew/plugins/ && mkdir -p ~/homebrew/settings/ExeKawaii/commands && cp ./examples/*.json ~/homebrew/settings/ExeKawaii/commands/"
+    "build:plugin": ".vscode/build.sh && sudo rm -rf ~/homebrew/plugins/ExeKawaii && sudo unzip ./out/ExeKawaii.zip -d ~/homebrew/plugins/ && mkdir -p ~/homebrew/settings/ExeKawaii/commands && cp ./examples/*.json ~/homebrew/settings/ExeKawaii/commands/"
   },
   "repository": {
     "type": "git",
