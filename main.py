@@ -177,7 +177,7 @@ class Plugin:
             for key, value in env_vars.items():
                 # Convert booleans and numbers to strings
                 if isinstance(value, bool):
-                    env[key] = "1" if value else "0"
+                    env[key] = "true" if value else "false"
                 else:
                     env[key] = str(value)
 
