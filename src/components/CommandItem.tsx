@@ -9,7 +9,11 @@ import {
 import { useCallback, useMemo, useState } from "react";
 import { FaDiceD6, FaEdit, FaTerminal, FaTrash } from "react-icons/fa";
 import { executeCommand } from "../api";
-import { CommandConfig, CommandResult, ConfigFieldValues } from "../plugin-types";
+import {
+  CommandConfig,
+  CommandResult,
+  ConfigFieldValues,
+} from "../plugin-types";
 import { ConfirmDeleteModal } from "./ConfirmDeleteModal";
 import { ConfigPanelModal } from "./ConfigPanelModal";
 
@@ -37,17 +41,17 @@ export function CommandItem({
     if (command.configFields) {
       for (const field of command.configFields) {
         if (field.type !== "divider" && "envVar" in field) {
-          merged[field.envVar] = configValues[field.envVar] ?? field.initialValue;
+          merged[field.envVar] =
+            configValues[field.envVar] ?? field.initialValue;
         }
       }
     }
     return merged;
   }, [command.configFields, configValues]);
 
-
   const hasConfigFields = useMemo(
     () => command.configFields && command.configFields.length > 0,
-    [command.configFields]
+    [command.configFields],
   );
 
   const handleRun = useCallback(async () => {
@@ -77,17 +81,22 @@ export function CommandItem({
           fields={command.configFields}
           values={mergedConfigValues}
           onSave={onConfigValuesSave}
-        />
+        />,
       );
     }
-  }, [command.title, command.configFields, mergedConfigValues, onConfigValuesSave]);
+  }, [
+    command.title,
+    command.configFields,
+    mergedConfigValues,
+    onConfigValuesSave,
+  ]);
 
   const handleDelete = useCallback(() => {
     showModal(
       <ConfirmDeleteModal
         title={command.title}
         onConfirm={() => onDelete(command.id)}
-      />
+      />,
     );
   }, [command.id, command.title, onDelete]);
 
@@ -95,13 +104,26 @@ export function CommandItem({
     <PanelSection>
       {/* Title and description */}
       <PanelSectionRow>
-        <Field label={command.title} description={command.description} bottomSeparator='none' childrenLayout='below' />
+        <Field
+          label={command.title}
+          description={command.description}
+          bottomSeparator="none"
+          childrenLayout="below"
+        />
       </PanelSectionRow>
 
       {/* Configuration button */}
       {hasConfigFields && (
         <PanelSectionRow>
-          <Focusable flow-children="horizontal" style={{ display: "flex", justifyContent: "center", padding: 0, marginBottom: "8px" }}>
+          <Focusable
+            flow-children="horizontal"
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              padding: 0,
+              marginBottom: "8px",
+            }}
+          >
             <DialogButton onClick={handleOpenConfig}>
               <FaDiceD6 style={{ marginRight: "8px" }} />
               Input
@@ -112,7 +134,15 @@ export function CommandItem({
 
       {/* Action buttons */}
       <PanelSectionRow>
-        <Focusable flow-children="horizontal" style={{ display: "flex", justifyContent: "space-between", padding: 0, gap: "8px" }}>
+        <Focusable
+          flow-children="horizontal"
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            padding: 0,
+            gap: "8px",
+          }}
+        >
           <div style={{ flexGrow: 1 }}>
             <DialogButton onClick={handleRun} disabled={running}>
               <FaTerminal style={{ marginRight: "8px" }} />
@@ -121,14 +151,24 @@ export function CommandItem({
           </div>
           <DialogButton
             aria-label="Edit Command"
-            style={{ minWidth: 0, width: "15%", paddingLeft: 0, paddingRight: 0 }}
+            style={{
+              minWidth: 0,
+              width: "15%",
+              paddingLeft: 0,
+              paddingRight: 0,
+            }}
             onClick={() => onEdit(command)}
           >
             <FaEdit />
           </DialogButton>
           <DialogButton
             aria-label="Delete Command"
-            style={{ minWidth: 0, width: "15%", paddingLeft: 0, paddingRight: 0 }}
+            style={{
+              minWidth: 0,
+              width: "15%",
+              paddingLeft: 0,
+              paddingRight: 0,
+            }}
             onClick={handleDelete}
           >
             <FaTrash />

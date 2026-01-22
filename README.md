@@ -80,6 +80,7 @@ The plugin will automatically load all `.json` files from this directory.
 ### Configuration Field Types
 
 #### Boolean (Switch)
+
 ```json
 {
   "type": "boolean",
@@ -89,10 +90,12 @@ The plugin will automatically load all `.json` files from this directory.
   "initialValue": false
 }
 ```
+
 - Renders as an on/off toggle switch
 - Environment variable will be set to "1" (on) or "0" (off)
 
 #### Number (Slider)
+
 ```json
 {
   "type": "number",
@@ -105,11 +108,13 @@ The plugin will automatically load all `.json` files from this directory.
   "step": 1
 }
 ```
+
 - Renders as a slider control
 - `min`, `max`: Define the range
 - `step`: Optional increment value (default: 1)
 
 #### Select (Dropdown)
+
 ```json
 {
   "type": "select",
@@ -123,10 +128,12 @@ The plugin will automatically load all `.json` files from this directory.
   ]
 }
 ```
+
 - Renders as a dropdown menu
 - `options`: Array of label/value pairs
 
 #### Divider
+
 ```json
 {
   "type": "divider",
@@ -134,5 +141,6 @@ The plugin will automatically load all `.json` files from this directory.
   "description": "Optional description"
 }
 ```
+
 - Creates a visual separator
 - No environment variable (purely visual)

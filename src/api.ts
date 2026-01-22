@@ -1,10 +1,17 @@
 import { callable } from "@decky/api";
-import { CommandConfig, CommandListResponse, CommandResult, ConfigFieldValues } from "./plugin-types";
+import {
+  CommandConfig,
+  CommandListResponse,
+  CommandResult,
+  ConfigFieldValues,
+} from "./plugin-types";
 
 // Backend API calls
 export const getCommands = callable<[], CommandListResponse>("get_commands");
 
-export const getCommand = callable<[commandId: string], CommandConfig | null>("get_command");
+export const getCommand = callable<[commandId: string], CommandConfig | null>(
+  "get_command",
+);
 
 export const saveCommand = callable<
   [command: CommandConfig],

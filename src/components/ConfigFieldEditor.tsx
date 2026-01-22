@@ -16,10 +16,15 @@ export interface ConfigFieldEditorProps {
   onRemove: (index: number) => void;
 }
 
-export function ConfigFieldEditor({ field, index, onChange, onRemove }: ConfigFieldEditorProps) {
+export function ConfigFieldEditor({
+  field,
+  index,
+  onChange,
+  onRemove,
+}: ConfigFieldEditorProps) {
   const updateField = useCallback(
     (key: string, value: any) => onChange(index, { ...field, [key]: value }),
-    [field, index, onChange]
+    [field, index, onChange],
   );
 
   const addSelectOption = useCallback(() => {
@@ -37,7 +42,7 @@ export function ConfigFieldEditor({ field, index, onChange, onRemove }: ConfigFi
         onChange(index, { ...field, options: newOptions });
       }
     },
-    [field, index, onChange]
+    [field, index, onChange],
   );
 
   const removeSelectOption = useCallback(
@@ -47,7 +52,7 @@ export function ConfigFieldEditor({ field, index, onChange, onRemove }: ConfigFi
         onChange(index, { ...field, options: newOptions });
       }
     },
-    [field, index, onChange]
+    [field, index, onChange],
   );
 
   return (
@@ -103,7 +108,9 @@ export function ConfigFieldEditor({ field, index, onChange, onRemove }: ConfigFi
             <TextField
               label="Initial Value"
               value={String(field.initialValue)}
-              onChange={(e) => updateField("initialValue", Number(e.target.value) || 0)}
+              onChange={(e) =>
+                updateField("initialValue", Number(e.target.value) || 0)
+              }
             />
           </PanelSectionRow>
           <PanelSectionRow>
@@ -117,7 +124,9 @@ export function ConfigFieldEditor({ field, index, onChange, onRemove }: ConfigFi
             <TextField
               label="Max"
               value={String(field.max)}
-              onChange={(e) => updateField("max", Number(e.target.value) || 100)}
+              onChange={(e) =>
+                updateField("max", Number(e.target.value) || 100)
+              }
             />
           </PanelSectionRow>
           <PanelSectionRow>
@@ -146,18 +155,25 @@ export function ConfigFieldEditor({ field, index, onChange, onRemove }: ConfigFi
                 <TextField
                   label={`Option ${optIndex + 1} Label`}
                   value={opt.label}
-                  onChange={(e) => updateSelectOption(optIndex, "label", e.target.value)}
+                  onChange={(e) =>
+                    updateSelectOption(optIndex, "label", e.target.value)
+                  }
                 />
               </PanelSectionRow>
               <PanelSectionRow>
                 <TextField
                   label={`Option ${optIndex + 1} Value`}
                   value={opt.value}
-                  onChange={(e) => updateSelectOption(optIndex, "value", e.target.value)}
+                  onChange={(e) =>
+                    updateSelectOption(optIndex, "value", e.target.value)
+                  }
                 />
               </PanelSectionRow>
               <PanelSectionRow>
-                <ButtonItem layout="below" onClick={() => removeSelectOption(optIndex)}>
+                <ButtonItem
+                  layout="below"
+                  onClick={() => removeSelectOption(optIndex)}
+                >
                   <FaTrash style={{ marginRight: "8px" }} />
                   Remove Option {optIndex + 1}
                 </ButtonItem>

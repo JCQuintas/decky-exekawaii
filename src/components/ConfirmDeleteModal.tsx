@@ -40,7 +40,10 @@ export function ConfirmDeleteModal({
           </PanelSection>
 
           <PanelSection>
-            <Focusable flow-children="horizontal" style={{ display: "flex", gap: "8px" }}>
+            <Focusable
+              flow-children="horizontal"
+              style={{ display: "flex", gap: "8px" }}
+            >
               <div style={{ flexGrow: 1 }}>
                 <DialogButton onClick={handleConfirm}>
                   <FaCheck style={{ marginRight: "8px" }} />
@@ -49,7 +52,12 @@ export function ConfirmDeleteModal({
               </div>
               <DialogButton
                 aria-label="Cancel"
-                style={{ minWidth: 0, width: "30%", paddingLeft: 0, paddingRight: 0 }}
+                style={{
+                  minWidth: 0,
+                  width: "30%",
+                  paddingLeft: 0,
+                  paddingRight: 0,
+                }}
                 onClick={closeModal}
               >
                 <FaTimes />

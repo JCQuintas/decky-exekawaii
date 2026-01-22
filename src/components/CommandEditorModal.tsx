@@ -31,21 +31,41 @@ function createDefaultField(type: string): ConfigField {
     case "boolean":
       return { ...base, type: "boolean", envVar: "", initialValue: false };
     case "number":
-      return { ...base, type: "number", envVar: "", initialValue: 0, min: 0, max: 100, step: 1 };
+      return {
+        ...base,
+        type: "number",
+        envVar: "",
+        initialValue: 0,
+        min: 0,
+        max: 100,
+        step: 1,
+      };
     case "select":
-      return { ...base, type: "select", envVar: "", initialValue: "", options: [] };
+      return {
+        ...base,
+        type: "select",
+        envVar: "",
+        initialValue: "",
+        options: [],
+      };
     case "divider":
     default:
       return { ...base, type: "divider" };
   }
 }
 
-export function CommandEditorModal({ command, onSave, ...props }: CommandEditorModalProps) {
+export function CommandEditorModal({
+  command,
+  onSave,
+  ...props
+}: CommandEditorModalProps) {
   const { closeModal } = props;
   const [title, setTitle] = useState(command?.title ?? "");
   const [description, setDescription] = useState(command?.description ?? "");
   const [cmd, setCmd] = useState(command?.command ?? "");
-  const [configFields, setConfigFields] = useState<ConfigField[]>(command?.configFields ?? []);
+  const [configFields, setConfigFields] = useState<ConfigField[]>(
+    command?.configFields ?? [],
+  );
 
   const handleSave = useCallback(() => {
     const newCommand: CommandConfig = {
@@ -83,9 +103,7 @@ export function CommandEditorModal({ command, onSave, ...props }: CommandEditorM
 
   return (
     <ModalRoot {...props}>
-      <DialogHeader>
-        {command ? "Edit Command" : "New Command"}
-      </DialogHeader>
+      <DialogHeader>{command ? "Edit Command" : "New Command"}</DialogHeader>
       <DialogBody>
         <Focusable>
           <PanelSection title="Command Details">
@@ -117,7 +135,10 @@ export function CommandEditorModal({ command, onSave, ...props }: CommandEditorM
           ))}
 
           <PanelSection title="Add Input Field">
-            <Focusable flow-children="vertical" style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+            <Focusable
+              flow-children="vertical"
+              style={{ display: "flex", flexDirection: "column", gap: "8px" }}
+            >
               {FIELD_TYPES.map((ft) => (
                 <DialogButton
                   key={ft.data}
@@ -130,7 +151,14 @@ export function CommandEditorModal({ command, onSave, ...props }: CommandEditorM
           </PanelSection>
 
           <PanelSection title="Actions">
-            <Focusable flow-children="horizontal" style={{ display: "flex", justifyContent: "space-between", gap: "8px" }}>
+            <Focusable
+              flow-children="horizontal"
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                gap: "8px",
+              }}
+            >
               <div style={{ flexGrow: 1 }}>
                 <DialogButton onClick={handleSave} disabled={!isValid}>
                   <FaSave style={{ marginRight: "8px" }} />
@@ -139,7 +167,12 @@ export function CommandEditorModal({ command, onSave, ...props }: CommandEditorM
               </div>
               <DialogButton
                 aria-label="Cancel"
-                style={{ minWidth: 0, width: "15%", paddingLeft: 0, paddingRight: 0 }}
+                style={{
+                  minWidth: 0,
+                  width: "15%",
+                  paddingLeft: 0,
+                  paddingRight: 0,
+                }}
                 onClick={handleCancel}
               >
                 <FaTimes />

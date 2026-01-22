@@ -33,9 +33,12 @@ export function ConfigPanelModal({
   const { closeModal } = props;
   const [values, setValues] = useState<ConfigFieldValues>(initialValues);
 
-  const handleChange = useCallback((envVar: string, value: string | number | boolean) => {
-    setValues((prev) => ({ ...prev, [envVar]: value }));
-  }, []);
+  const handleChange = useCallback(
+    (envVar: string, value: string | number | boolean) => {
+      setValues((prev) => ({ ...prev, [envVar]: value }));
+    },
+    [],
+  );
 
   const handleDone = useCallback(() => {
     onSave(values);
@@ -70,8 +73,13 @@ export function ConfigPanelModal({
                       <ToggleField
                         label={field.title}
                         description={field.description}
-                        checked={(values[field.envVar] as boolean) ?? field.initialValue}
-                        onChange={(checked) => handleChange(field.envVar, checked)}
+                        checked={
+                          (values[field.envVar] as boolean) ??
+                          field.initialValue
+                        }
+                        onChange={(checked) =>
+                          handleChange(field.envVar, checked)
+                        }
                       />
                     </PanelSectionRow>
                   );
@@ -82,7 +90,9 @@ export function ConfigPanelModal({
                       <SliderField
                         label={field.title}
                         description={field.description}
-                        value={(values[field.envVar] as number) ?? field.initialValue}
+                        value={
+                          (values[field.envVar] as number) ?? field.initialValue
+                        }
                         min={field.min}
                         max={field.max}
                         step={field.step ?? 1}
@@ -97,7 +107,9 @@ export function ConfigPanelModal({
                     <PanelSectionRow key={key}>
                       <SelectField
                         field={field}
-                        value={(values[field.envVar] as string) ?? field.initialValue}
+                        value={
+                          (values[field.envVar] as string) ?? field.initialValue
+                        }
                         onChange={(value) => handleChange(field.envVar, value)}
                       />
                     </PanelSectionRow>
