@@ -21,6 +21,7 @@ interface CommandEditorModalProps {
 const FIELD_TYPES = [
   { label: "Boolean (Switch)", data: "boolean" },
   { label: "Number (Slider)", data: "number" },
+  { label: "Time (Slider)", data: "time" },
   { label: "Select (Dropdown)", data: "select" },
   { label: "Divider", data: "divider" },
 ];
@@ -39,6 +40,18 @@ function createDefaultField(type: string): ConfigField {
         min: 0,
         max: 100,
         step: 1,
+      };
+    case "time":
+      return {
+        ...base,
+        type: "time",
+        envVar: "",
+        initialValue: 0,
+        min: 0,
+        max: 60,
+        step: 1,
+        inputUnit: "seconds",
+        outputUnit: "milliseconds",
       };
     case "select":
       return {

@@ -36,11 +36,32 @@ export interface DividerConfigField extends BaseConfigField {
   type: "divider";
 }
 
+export type TimeUnit =
+  | "nanoseconds"
+  | "microseconds"
+  | "milliseconds"
+  | "seconds"
+  | "minutes"
+  | "hours"
+  | "days";
+
+export interface TimeConfigField extends BaseConfigField {
+  type: "time";
+  envVar: string;
+  initialValue: number;
+  min: number;
+  max: number;
+  step?: number;
+  inputUnit: TimeUnit;
+  outputUnit: TimeUnit;
+}
+
 export type ConfigField =
   | BooleanConfigField
   | SelectConfigField
   | NumberConfigField
-  | DividerConfigField;
+  | DividerConfigField
+  | TimeConfigField;
 
 // Command configuration
 export interface CommandConfig {

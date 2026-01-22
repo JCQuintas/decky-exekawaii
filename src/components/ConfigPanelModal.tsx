@@ -13,6 +13,11 @@ import {
 import { useCallback, useState } from "react";
 import { FaCheck } from "react-icons/fa";
 import { ConfigField, ConfigFieldValues } from "../plugin-types";
+import {
+  convertTimeUnit,
+  formatTimeValue,
+  TIME_UNIT_SHORT_LABELS,
+} from "../utils/time-units";
 import { SelectField } from "./SelectField";
 
 interface ConfigPanelModalProps {
@@ -114,6 +119,49 @@ export function ConfigPanelModal({
                       />
                     </PanelSectionRow>
                   );
+
+                case "time": {
+                  // Stored value is in output units, display in input units
+                  const storedValue =
+                    (values[field.envVar] as number) ??
+                    convertTimeUnit(
+                      field.initialValue,
+                      field.inputUnit,
+                      field.outputUnit,
+                    );
+                  const displayValue = convertTimeUnit(
+                    storedValue,
+                    field.outputUnit,
+                    field.inputUnit,
+                  );
+                  return (
+                    <PanelSectionRow key={key}>
+                      <SliderField
+                        label={field.title}
+                        description={
+                          field.description
+                            ? `${field.description} (Output: ${formatTimeValue(storedValue, field.outputUnit, true)})`
+                            : `Output: ${formatTimeValue(storedValue, field.outputUnit, true)}`
+                        }
+                        value={displayValue}
+                        min={field.min}
+                        max={field.max}
+                        step={field.step ?? 1}
+                        onChange={(value) => {
+                          // Convert from input units to output units for storage
+                          const outputValue = convertTimeUnit(
+                            value,
+                            field.inputUnit,
+                            field.outputUnit,
+                          );
+                          handleChange(field.envVar, outputValue);
+                        }}
+                        showValue
+                        valueSuffix={` ${TIME_UNIT_SHORT_LABELS[field.inputUnit]}`}
+                      />
+                    </PanelSectionRow>
+                  );
+                }
 
                 default:
                   return null;

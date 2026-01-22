@@ -1,5 +1,6 @@
 import {
   ButtonItem,
+  DropdownItem,
   PanelSection,
   PanelSectionRow,
   TextField,
@@ -7,7 +8,8 @@ import {
 } from "@decky/ui";
 import { useCallback } from "react";
 import { FaPlus, FaTrash } from "react-icons/fa";
-import { ConfigField, SelectOption } from "../plugin-types";
+import { ConfigField, SelectOption, TimeUnit } from "../plugin-types";
+import { TIME_UNIT_LABELS, TIME_UNITS } from "../utils/time-units";
 
 export interface ConfigFieldEditorProps {
   field: ConfigField;
@@ -132,6 +134,69 @@ export function ConfigFieldEditor({
           <PanelSectionRow>
             <TextField
               label="Step"
+              value={String(field.step || 1)}
+              onChange={(e) => updateField("step", Number(e.target.value) || 1)}
+            />
+          </PanelSectionRow>
+        </>
+      )}
+
+      {field.type === "time" && (
+        <>
+          <PanelSectionRow>
+            <DropdownItem
+              label="Input Unit (Display)"
+              rgOptions={TIME_UNITS.map((unit) => ({
+                label: TIME_UNIT_LABELS[unit],
+                data: unit,
+              }))}
+              selectedOption={field.inputUnit}
+              onChange={(option) =>
+                updateField("inputUnit", option.data as TimeUnit)
+              }
+            />
+          </PanelSectionRow>
+          <PanelSectionRow>
+            <DropdownItem
+              label="Output Unit (Stored)"
+              rgOptions={TIME_UNITS.map((unit) => ({
+                label: TIME_UNIT_LABELS[unit],
+                data: unit,
+              }))}
+              selectedOption={field.outputUnit}
+              onChange={(option) =>
+                updateField("outputUnit", option.data as TimeUnit)
+              }
+            />
+          </PanelSectionRow>
+          <PanelSectionRow>
+            <TextField
+              label="Initial Value (in input units)"
+              value={String(field.initialValue)}
+              onChange={(e) =>
+                updateField("initialValue", Number(e.target.value) || 0)
+              }
+            />
+          </PanelSectionRow>
+          <PanelSectionRow>
+            <TextField
+              label="Min (in input units)"
+              value={String(field.min)}
+              onChange={(e) => updateField("min", Number(e.target.value) || 0)}
+            />
+          </PanelSectionRow>
+          <PanelSectionRow>
+            <TextField
+              label="Max (in input units)"
+              value={String(field.max)}
+              onChange={(e) =>
+                updateField("max", Number(e.target.value) || 100)
+              }
+            />
+          </PanelSectionRow>
+          <PanelSectionRow>
+            <TextField
+              label="Step (in input units)"
               value={String(field.step || 1)}
               onChange={(e) => updateField("step", Number(e.target.value) || 1)}
             />
